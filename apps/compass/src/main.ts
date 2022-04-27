@@ -6,7 +6,7 @@ import {API_PREFIX, SERVER_PORT} from "./config";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  injectGlobalPlugins(app)
+  await injectGlobalPlugins(app)
   injectGlobalMiddleware(app)
   app.setGlobalPrefix(API_PREFIX)
   await app.listen(SERVER_PORT);

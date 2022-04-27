@@ -36,3 +36,4 @@ lerna-debug.log*
 
 /deploy/db
 /deploy/redis-data
+.env

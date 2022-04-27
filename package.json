@@ -13,6 +13,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "prisma": "prisma",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -25,11 +26,13 @@
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^5.2.1",
+    "@prisma/client": "^3.13.0",
     "compression": "^1.7.4",
     "date-fns": "^2.28.0",
     "express": "^4.17.3",
     "helmet": "^5.0.2",
     "joi": "^17.6.0",
+    "prisma": "^3.13.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
@@ -60,6 +63,9 @@
     "typescript": "^4.3.5",
     "webpack": "^5.72.0"
   },
+  "prisma": {
+    "schema": "libs/db/src/schema.prisma"
+  },
   "jest": {
     "moduleFileExtensions": [
       "js",
@@ -81,7 +87,8 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@libs/config(|/.*)$": "<rootDir>/libs/config/src/$1"
+      "^@libs/config(|/.*)$": "<rootDir>/libs/config/src/$1",
+      "^@libs/db(|/.*)$": "<rootDir>/libs/db/src/$1"
     }
   }
 }
