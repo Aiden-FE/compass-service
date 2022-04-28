@@ -5,17 +5,72 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator docs {
+  provider = "node node_modules/prisma-docs-generator"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-model Premission {
+model Permission {
   id          Int      @id @default(autoincrement())
-  key         String   @unique @db.VarChar(255)
-  name        String   @db.VarChar(128)
-  parentKey   String?  @db.VarChar(255)
+  key         String   @unique @db.VarChar(128)
+  name        String   @db.VarChar(24)
+  ownerApp    OwnerApp @default(COMMON) @map("owner_app") // 归属的应用范围
   description String?  @db.VarChar(255)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  roles Role[]
+
+  @@index([key, ownerApp])
+  @@map("permissions")
+}
+
+model Role {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(24)
+  description String?  @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  permissions Permission[]
+
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+  @@map("roles")
+}
+
+model User {
+  id              String    @id @default(cuid())
+  telephone       String    @db.VarChar(64) // 手机号码
+  password        String    @db.VarChar(64) // 登录密码
+  account         String?   @db.VarChar(64) // 登录账号
+  name            String?   @db.VarChar(255) // 真实姓名
+  nickname        String?   @db.VarChar(24) // 昵称
+  gender          Gender?   @default(UNKOWN)
+  birthday        DateTime?
+  email           String?   @db.VarChar(255)
+  enabled         Boolean?  @default(true) // 账号启用状态
+  lastLoginTime   DateTime? @map("last_login_time")
+  countryAreaCode String?   @default("0086") @map("country_area_code") // 号码所在国家区号
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  roles Role[]
+
+  @@index([telephone, account])
+  @@map("users")
+}
+
+enum OwnerApp {
+  COMMON
+}
+
+enum Gender {
+  WOMEN
+  MEN
+  UNKOWN
 }

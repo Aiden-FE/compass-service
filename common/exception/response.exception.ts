@@ -15,12 +15,7 @@ export class ResponseException extends HttpException {
       Object.assign({
         status: ResponseCode.ERROR,
         message: 'Unknown error'
-      }, {
-        status: errorOption.status,
-        result: errorOption.result,
-        message: errorOption.message,
-        details: errorOption.details
-      }),
+      }, errorOption),
       httpStatus,
     );
   }
