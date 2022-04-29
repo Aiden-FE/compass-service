@@ -1,5 +1,5 @@
-import {Body, Controller, Post, Headers} from '@nestjs/common';
-import {PermissionCreateDto, OwnerApp, PermissionDeleteDto} from "./permissions.dto";
+import {Body, Controller, Post, Headers, Delete, Param, Put, Get} from '@nestjs/common';
+import {PermissionCreateDto, OwnerApp, PermissionUpdateDto} from "./permissions.dto";
 import {PermissionsService} from "./permissions.service";
 
 @Controller('permissions')
@@ -8,7 +8,7 @@ export class PermissionsController {
     private permissionsService: PermissionsService
   ) {
   }
-  @Post('create')
+  @Post()
   async create (
     @Headers('owner_app') owner: OwnerApp,
     @Body() body: PermissionCreateDto
@@ -19,12 +19,27 @@ export class PermissionsController {
     })
   }
   
-  @Post('delete')
-  async delete (@Body() body: PermissionDeleteDto) {
-    await this.permissionsService.deletePermission(body)
+  @Delete(':key')
+  async delete (@Param('key') key: string) {
+    await this.permissionsService.deletePermission(key)
     return true
   }
   
-  @Post('update')
-  async update () {}
+  @Put(':key')
+  async update (
+    @Param('key') key: string,
+    @Body() body: PermissionUpdateDto,
+  ) {
+    return this.permissionsService.updatePermission(key, body)
+  }
+  
+  @Get(':key')
+  async getPermissionInfoByKey (@Param('key') key: string) {
+    return this.permissionsService.getPermissionInfoByKey(key)
+  }
+  
+  @Get()
+  async getPermissionsInfo (@Headers('owner_app') owner: OwnerApp) {
+    return this.permissionsService.getPermissionsInfo(owner)
+  }
 }

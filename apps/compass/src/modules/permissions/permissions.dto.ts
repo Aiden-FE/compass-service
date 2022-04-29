@@ -13,16 +13,7 @@ export class PermissionCreateDto {
   description?: string
 }
 
-export class PermissionDeleteDto {
-  @MaxLength(128)
-  @MinLength(2)
-  key: string
-}
-
 export class PermissionUpdateDto {
-  @MaxLength(128)
-  @MinLength(2)
-  key: string
   @MaxLength(24)
   @MinLength(2)
   name?: string

@@ -37,10 +37,15 @@ export class ResponseInterceptor implements NestInterceptor {
         }
         return responseData;
       }),
-      catchError((err) => throwError(() => new ResponseException({
-        message: err.response?.message.join(';'),
-        details: err.response?.message.join(';')
-      }))),
+      catchError((err) => {
+        console.log('catch error: ', err)
+        return throwError(() => new ResponseException({
+          details: err.response?.message.join(';'),
+          message: err.response?.message.join(';')
+            || err.meta?.cause
+            || err.message,
+        }))
+      }),
     );
   }
 }

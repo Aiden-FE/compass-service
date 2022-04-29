@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `permissions` MODIFY `owner_app` ENUM('COMMON', 'BOOKMARK', 'CLAY', 'HOURGLASS') NOT NULL DEFAULT 'COMMON';

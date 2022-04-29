@@ -67,6 +67,9 @@ model User {
 
 enum OwnerApp {
   COMMON
+  BOOKMARK
+  CLAY
+  HOURGLASS
 }
 
 enum Gender {

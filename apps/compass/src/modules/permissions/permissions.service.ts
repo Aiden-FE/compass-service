@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {DbService} from "@libs/db";
-import {PermissionCreateDto, OwnerApp, PermissionDeleteDto} from "./permissions.dto";
+import {PermissionCreateDto, OwnerApp, PermissionUpdateDto} from "./permissions.dto";
 
 @Injectable()
 export class PermissionsService {
@@ -15,9 +15,34 @@ export class PermissionsService {
     })
   }
   
-  deletePermission (data: PermissionDeleteDto) {
+  async deletePermission (key: string) {
     return this.dbService.permission.delete({
-      where: data
+      where: { key }
+    })
+  }
+  
+  updatePermission (key: string, data: PermissionUpdateDto) {
+    return this.dbService.permission.update({
+      where: { key },
+      data: data,
+    })
+  }
+  
+  getPermissionInfoByKey (key: string) {
+    return this.dbService.permission.findUnique({
+      where: { key }
+    })
+  }
+  
+  getPermissionsInfo (ownerApp: OwnerApp) {
+    const orConditions: {ownerApp: OwnerApp}[] = [{ ownerApp: 'COMMON' }]
+    if (ownerApp !== 'COMMON') {
+      orConditions.push({ ownerApp })
+    }
+    return this.dbService.permission.findMany({
+      where: {
+        OR: orConditions
+      }
     })
   }
 }
