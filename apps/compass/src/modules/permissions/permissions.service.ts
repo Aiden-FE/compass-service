@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {DbService} from "@libs/db";
 import {PermissionCreateDto, OwnerApp, PermissionUpdateDto} from "./permissions.dto";
+import { OwnerApp as OwnerAppData } from '@prisma/client'
 
 @Injectable()
 export class PermissionsService {
@@ -35,9 +36,13 @@ export class PermissionsService {
   }
   
   getPermissionsInfo (ownerApp: OwnerApp) {
-    const orConditions: {ownerApp: OwnerApp}[] = [{ ownerApp: 'COMMON' }]
+    let orConditions: {ownerApp: OwnerApp}[] = [{ ownerApp: 'COMMON' }]
     if (ownerApp !== 'COMMON') {
       orConditions.push({ ownerApp })
+    } else {
+      orConditions = orConditions.concat(
+        Object.keys(OwnerAppData).map((key) => ({ownerApp: OwnerAppData[key]}))
+      )
     }
     return this.dbService.permission.findMany({
       where: {

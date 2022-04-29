@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import {ConfigModule} from "@libs/config";
 import {DbModule} from "@libs/db";
 import modules from './modules';
+import {APP_GUARD} from "@nestjs/core";
+import {AuthorizationGuard} from "@common";
 
 @Module({
   imports: [
@@ -12,6 +14,12 @@ import modules from './modules';
     ...modules,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthorizationGuard
+    },
+  ],
 })
 export class AppModule {}

@@ -38,8 +38,7 @@ model Role {
 
   permissions Permission[]
 
-  User   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  users User[]
   @@map("roles")
 }
 
@@ -60,7 +59,6 @@ model User {
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
   roles Role[]
-
   @@index([telephone, account])
   @@map("users")
 }
