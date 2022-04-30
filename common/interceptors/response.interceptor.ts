@@ -21,7 +21,7 @@ export class ResponseInterceptor implements NestInterceptor {
       map(resp => {
         let responseData: SuccessResponse | ErrorResponse;
         if (Array.isArray(resp)) {
-          const [result, message, status, details] = resp;
+          const [result, status, message, details] = resp;
           responseData = {
             result,
             message: message || DEFAULT_MESSAGE,
@@ -40,8 +40,8 @@ export class ResponseInterceptor implements NestInterceptor {
       catchError((err) => {
         console.log('catch error: ', err)
         return throwError(() => new ResponseException({
-          details: err.response?.message.join(';'),
-          message: err.response?.message.join(';')
+          details: err.response?.message.join(';\n'),
+          message: err.response?.message.join(';\n')
             || err.meta?.cause
             || err.message,
         }))

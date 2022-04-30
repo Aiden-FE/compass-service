@@ -15,3 +15,6 @@ export enum PermissionsEnum {
   COMMON_USER_UPDATE = 'common_user_update',
   COMMON_USER_QUERY = 'common_user_query',
 }
+
+export const DEFAULT_PAGE_NUM = 0
+export const DEFAULT_PAGE_SIZE = 9999

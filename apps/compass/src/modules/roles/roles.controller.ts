@@ -1,13 +1,15 @@
-import {Body, Controller, Delete, Get, Post, Put} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put, Query} from '@nestjs/common';
 import {ApiOperation, ApiTags} from "@nestjs/swagger";
 import {Authorization, PermissionsEnum} from "@common";
-import {RolesCreateDto} from "./roles.dto";
+import {RolesCreateDto, RolesListQueryDto, RolesUpdateDto} from "./roles.dto";
 import {RolesService} from "./roles.service";
 
 @ApiTags('角色管理')
 @Controller('roles')
 export class RolesController {
-  constructor(private rolesService: RolesService) {
+  constructor(
+    private rolesService: RolesService,
+  ) {
   }
   @ApiOperation({
     summary: '创建角色'
@@ -23,26 +25,38 @@ export class RolesController {
   })
   @Authorization(PermissionsEnum.COMMON_ROLE_DELETE)
   @Delete(':id')
-  delete () {}
+  async delete (@Param('id') id: number) {
+    await this.rolesService.deleteRoleById(id)
+    return true
+  }
   
   @ApiOperation({
     summary: '更新角色'
   })
   @Authorization(PermissionsEnum.COMMON_ROLE_UPDATE)
   @Put(':id')
-  update () {}
+  update (
+    @Param('id') id: number,
+    @Body() body: RolesUpdateDto,
+  ) {
+    return this.rolesService.updateRoleById(id, body)
+  }
   
   @ApiOperation({
     summary: '查询指定角色'
   })
   @Authorization(PermissionsEnum.COMMON_ROLE_QUERY)
   @Get(':id')
-  query () {}
+  query (@Param('id') id: number) {
+    return this.rolesService.findRoleById(id)
+  }
   
   @ApiOperation({
-    summary: '创建角色'
+    summary: '查询角色列表'
   })
   @Authorization(PermissionsEnum.COMMON_ROLE_QUERY)
   @Get()
-  all () {}
+  async all (@Query() query: Partial<RolesListQueryDto>) {
+    return this.rolesService.findRoles(query)
+  }
 }

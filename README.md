@@ -33,3 +33,7 @@ prisma format # 格式化.prisma配置文件
 prisma generate # 读取prisma生成更改, 每当.prisma架构发生变化后都应执行
 prisma-docs-generator serve # 基于当前generate的结果 启动文档服务
 ```
+
+## Api Document
+
+https://www.apifox.cn/apidoc/shared-7e08225b-7c61-4afd-a951-933d06f3aaf4

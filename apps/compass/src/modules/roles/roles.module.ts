@@ -4,6 +4,7 @@ import { RolesService } from './roles.service';
 import {DbService} from "@libs/db";
 
 @Module({
+  imports: [],
   controllers: [RolesController],
   providers: [RolesService, DbService]
 })
