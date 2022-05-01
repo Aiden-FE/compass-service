@@ -5,6 +5,7 @@ import { ResponseException } from "@common";
 
 export interface EnvironmentDataType {
   ENV: string,
+  COMMENT: string,
 }
 
 @Injectable()
@@ -39,6 +40,7 @@ export class ConfigService {
   private validateEnv(envConfig: Partial<EnvironmentDataType>): EnvironmentDataType {
     const envVarsSchema: Joi.ObjectSchema = Joi.object({
       ENV: Joi.string().valid('dev', 'prod').default('dev'),
+      COMMENT: Joi.string()
     });
     
     const { error, value: validateEnvConfig } =

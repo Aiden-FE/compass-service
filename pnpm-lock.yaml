@@ -1,6 +1,8 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@alicloud/dysmsapi20170525': ^2.0.9
+  '@alicloud/openapi-client': ^0.4.1
   '@compass-aiden/utils': ^1.3.0
   '@nestjs/cli': ^8.0.0
   '@nestjs/common': ^8.0.0
@@ -12,6 +14,7 @@ specifiers:
   '@prisma/client': ^3.13.0
   '@types/compression': ^1.7.2
   '@types/express': ^4.17.13
+  '@types/express-session': ^1.17.4
   '@types/jest': 27.4.1
   '@types/node': ^16.0.0
   '@types/supertest': ^2.0.11
@@ -25,9 +28,12 @@ specifiers:
   eslint-config-prettier: ^8.3.0
   eslint-plugin-prettier: ^4.0.0
   express: ^4.17.3
+  express-session: ^1.17.2
   helmet: ^5.0.2
   jest: ^27.2.5
   joi: ^17.6.0
+  lodash-es: ^4.17.21
+  nestjs-session: ^2.0.0
   prettier: ^2.3.2
   prisma: ^3.13.0
   prisma-docs-generator: ^0.5.0
@@ -36,6 +42,7 @@ specifiers:
   rxjs: ^7.2.0
   source-map-support: ^0.5.20
   supertest: ^6.1.3
+  svg-captcha: ^1.4.0
   swagger-ui-express: ^4.3.0
   ts-jest: ^27.0.3
   ts-loader: ^9.2.3
@@ -45,6 +52,8 @@ specifiers:
   webpack: ^5.72.0
 
 dependencies:
+  '@alicloud/dysmsapi20170525': 2.0.9
+  '@alicloud/openapi-client': 0.4.1
   '@compass-aiden/utils': 1.3.0
   '@nestjs/common': 8.4.4_5199533202e21c7185c9d97f881e2827
   '@nestjs/core': 8.4.4_b63c269346792a9d57cfab86d23050d2
@@ -56,13 +65,17 @@ dependencies:
   compression: 1.7.4
   date-fns: 2.28.0
   express: 4.17.3
+  express-session: 1.17.2
   helmet: 5.0.2
   joi: 17.6.0
+  lodash-es: 4.17.21
+  nestjs-session: 2.0.0_026d46cdf38b8605d9d6cb75a3237d67
   prisma: 3.13.0
   prisma-docs-generator: 0.5.0
   reflect-metadata: 0.1.13
   rimraf: 3.0.2
   rxjs: 7.5.5
+  svg-captcha: 1.4.0
   swagger-ui-express: 4.3.0_express@4.17.3
 
 devDependencies:
@@ -71,6 +84,7 @@ devDependencies:
   '@nestjs/testing': 8.4.4_5ba9349f42f6f669a747311efc3e3761
   '@types/compression': 1.7.2
   '@types/express': 4.17.13
+  '@types/express-session': 1.17.4
   '@types/jest': 27.4.1
   '@types/node': 16.11.27
   '@types/supertest': 2.0.12
@@ -91,6 +105,88 @@ devDependencies:
   webpack: 5.72.0
 
 packages:
+
+  /@alicloud/credentials/2.2.2:
+    resolution: {integrity: sha512-FZYUFXZ/G6WWpKy58Eg01LWcA1ejO3huNJYiQ9VYCDCno+RmUjy+xs+r+7WULR52fmwPNaKkqlSuA9L5cJVyjw==}
+    dependencies:
+      '@alicloud/tea-typescript': 1.7.2
+      httpx: 2.2.7
+      ini: 1.3.8
+      kitx: 2.1.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@alicloud/dysmsapi20170525/2.0.9:
+    resolution: {integrity: sha512-iI063RLiPSHHjAUjd34k0iFykxEr/6xrbTqiJvC2a4ZkRBA9TkpdLAwSlWrDHX3yDa0RZ4R44keXfOITFWepog==}
+    dependencies:
+      '@alicloud/endpoint-util': 0.0.1
+      '@alicloud/openapi-client': 0.4.1
+      '@alicloud/openapi-util': 0.2.8
+      '@alicloud/tea-typescript': 1.7.2
+      '@alicloud/tea-util': 1.4.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@alicloud/endpoint-util/0.0.1:
+    resolution: {integrity: sha512-+pH7/KEXup84cHzIL6UJAaPqETvln4yXlD9JzlrqioyCSaWxbug5FUobsiI6fuUOpw5WwoB3fWAtGbFnJ1K3Yg==}
+    dependencies:
+      '@alicloud/tea-typescript': 1.7.2
+      kitx: 2.1.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@alicloud/gateway-spi/0.0.8:
+    resolution: {integrity: sha512-KM7fu5asjxZPmrz9sJGHJeSU+cNQNOxW+SFmgmAIrITui5hXL2LB+KNRuzWmlwPjnuA2X3/keq9h6++S9jcV5g==}
+    dependencies:
+      '@alicloud/credentials': 2.2.2
+      '@alicloud/tea-typescript': 1.7.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@alicloud/openapi-client/0.4.1:
+    resolution: {integrity: sha512-FNGQ9kmGi0AuNFX9yj7DDbMn8CB4TvihIIQ3ONNhLZF8Hj2asau7NiqVoftJX3F/JFq9qzJWeVbvboSM9Zq5kA==}
+    dependencies:
+      '@alicloud/credentials': 2.2.2
+      '@alicloud/gateway-spi': 0.0.8
+      '@alicloud/openapi-util': 0.2.8
+      '@alicloud/tea-typescript': 1.7.2
+      '@alicloud/tea-util': 1.4.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@alicloud/openapi-util/0.2.8:
+    resolution: {integrity: sha512-63UWzteiJrSBGyMATHsuREhLKt6amRalwwumG9ufvMEVSx52x+DdxY8WrM8wwHL8BWEmmBllWCMPZ3TVrwBI7A==}
+    dependencies:
+      '@alicloud/tea-typescript': 1.7.2
+      '@alicloud/tea-util': 1.4.3
+      kitx: 2.1.0
+      sm3: 1.0.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@alicloud/tea-typescript/1.7.2:
+    resolution: {integrity: sha512-vDOU6qUp9ZAGlHSLC7lqVLgxUbmkcDXTEXyiIipvPWcq7dqwDDO6SeLlU7nBYI+yYWpbfOazEGkMTlHMhvA5Tw==}
+    dependencies:
+      '@types/node': 12.20.50
+      httpx: 2.2.7
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@alicloud/tea-util/1.4.3:
+    resolution: {integrity: sha512-8bYzfn+hmzp8L1tkfOX7XNqOOc57i23EAVe09SvM/DasySTtBFdONkDV+EtHzROohBI1zpbE61EFD8jGThg1OA==}
+    dependencies:
+      '@alicloud/tea-typescript': 1.7.2
+      kitx: 2.1.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /@ampproject/remapping/2.1.2:
     resolution: {integrity: sha512-hoyByceqwKirw7w3Z7gnIIZC3Wx3J484Y3L/cMpXFbr7d9ZQj2mODrirNzcJa+SM3UlpWXYvKV4RlRpFXlWgXg==}
@@ -1310,6 +1406,12 @@ packages:
       '@types/range-parser': 1.2.4
     dev: true
 
+  /@types/express-session/1.17.4:
+    resolution: {integrity: sha512-7cNlSI8+oOBUHTfPXMwDxF/Lchx5aJ3ho7+p9jJZYVg9dVDJFh3qdMXmJtRsysnvS+C6x46k9DRYmrmCkE+MVg==}
+    dependencies:
+      '@types/express': 4.17.13
+    dev: true
+
   /@types/express/4.17.13:
     resolution: {integrity: sha512-6bSZTPaTIACxn48l50SR+axgrqm6qXFIxrdAKaG6PaJk3+zuUr35hBlgT7vOmJcum+OEaIBLtHV/qloEAFITeA==}
     dependencies:
@@ -1366,6 +1468,14 @@ packages:
 
   /@types/ms/0.7.31:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
+    dev: false
+
+  /@types/node/12.20.50:
+    resolution: {integrity: sha512-+9axpWx2b2JCVovr7Ilgt96uc6C1zBKOQMpGtRbWT9IoR/8ue32GGMfGA4woP8QyP2gBs6GQWEVM3tCybGCxDA==}
+    dev: false
+
+  /@types/node/14.18.16:
+    resolution: {integrity: sha512-X3bUMdK/VmvrWdoTkz+VCn6nwKwrKCFTHtqwBIaQJNx4RUIBBUFXM00bqPz/DsDd+Icjmzm6/tyYZzeGVqb6/Q==}
     dev: false
 
   /@types/node/16.11.27:
@@ -2400,6 +2510,11 @@ packages:
     resolution: {integrity: sha512-QADzlaHc8icV8I7vbaJXJwod9HWYp8uCqf1xa4OfNu1T7JVxQIrUgOWtHdNDtPiywmFbiS12VjotIXLrKM3orQ==}
     dev: false
 
+  /cookie/0.4.1:
+    resolution: {integrity: sha512-ZwrFkGJxUR3EIoXtO+yVE69Eb7KlixbaeAWfBQB9vVsNn/o+Yw69gBWSSDK825hQNdN+wF8zELf3dFNl/kxkUA==}
+    engines: {node: '>= 0.6'}
+    dev: false
+
   /cookie/0.4.2:
     resolution: {integrity: sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==}
     engines: {node: '>= 0.6'}
@@ -2444,6 +2559,15 @@ packages:
     dependencies:
       crc-32: 1.2.2
       readable-stream: 3.6.0
+    dev: false
+
+  /create-nestjs-middleware-module/0.2.2_@nestjs+common@8.4.4:
+    resolution: {integrity: sha512-S9+DdSEQE1dNVIxIoaJ05ZvxaRiRCH0lBguU90/MCASMFXfYDQAY3HE75/iJlH2nM6ARSsVuoVYJp4YehglDEQ==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@nestjs/common': '>=6.0.0'
+    dependencies:
+      '@nestjs/common': 8.4.4_5199533202e21c7185c9d97f881e2827
     dev: false
 
   /create-require/1.1.1:
@@ -2931,6 +3055,20 @@ packages:
       jest-matcher-utils: 27.5.1
       jest-message-util: 27.5.1
     dev: true
+
+  /express-session/1.17.2:
+    resolution: {integrity: sha512-mPcYcLA0lvh7D4Oqr5aNJFMtBMKPLl++OKKxkHzZ0U0oDq1rpKBnkR5f5vCHR26VeArlTOEF9td4x5IjICksRQ==}
+    engines: {node: '>= 0.8.0'}
+    dependencies:
+      cookie: 0.4.1
+      cookie-signature: 1.0.6
+      debug: 2.6.9
+      depd: 2.0.0
+      on-headers: 1.0.2
+      parseurl: 1.3.3
+      safe-buffer: 5.2.1
+      uid-safe: 2.1.5
+    dev: false
 
   /express/4.17.3:
     resolution: {integrity: sha512-yuSQpz5I+Ch7gFrPCk4/c+dIBKlQUxtgwqzph132bsT6qhuzss6I8cLJQz7B3rFblzd6wtcI0ZbGltH/C4LjUg==}
@@ -3435,6 +3573,15 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
+  /httpx/2.2.7:
+    resolution: {integrity: sha512-Wjh2JOAah0pdczfqL8NC5378G7jMt0Zcpn8U+yyxAiejjlagzSTQgJHuVvka2VNPQlKfoGehYRc79WKq9E4gDw==}
+    dependencies:
+      '@types/node': 14.18.16
+      debug: 4.3.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /human-signals/1.1.1:
     resolution: {integrity: sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==}
     engines: {node: '>=8.12.0'}
@@ -3492,6 +3639,10 @@ packages:
 
   /inherits/2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
+
+  /ini/1.3.8:
+    resolution: {integrity: sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==}
+    dev: false
 
   /ini/2.0.0:
     resolution: {integrity: sha512-7PnF4oN3CvZF23ADhA5wRaYEQpJ8qygSkbtTXWBeXWXmEVRXK+1ITciHWwHhsjv1TmW0MgacIv6hEi5pX5NQdA==}
@@ -4294,6 +4445,12 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
+  /kitx/2.1.0:
+    resolution: {integrity: sha512-C/5v9MtIX7aHGOjwn5BmrrbNkJSf7i0R5mRzmh13GSAdRqQ7bYQo/Su2pTYNylFicqKNTVX3HML9k1u8k51+pQ==}
+    dependencies:
+      '@types/node': 12.20.50
+    dev: false
+
   /kleur/3.0.3:
     resolution: {integrity: sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==}
     engines: {node: '>=6'}
@@ -4354,6 +4511,10 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
+    dev: false
+
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: false
 
   /lodash.defaults/4.2.0:
@@ -4607,6 +4768,20 @@ packages:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
     dev: true
 
+  /nestjs-session/2.0.0_026d46cdf38b8605d9d6cb75a3237d67:
+    resolution: {integrity: sha512-Li5VbSyRuSZzaIuPGm+m9bmrF7nciZBjZVAi1mP0RrfmL7RcItP7pMfj64JTtUZrPNR+QczcHlnqNFnCjL04wg==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@types/express-session': ^1.17.4
+      express-session: ^1.17.2
+    dependencies:
+      '@types/express-session': 1.17.4
+      create-nestjs-middleware-module: 0.2.2_@nestjs+common@8.4.4
+      express-session: 1.17.2
+    transitivePeerDependencies:
+      - '@nestjs/common'
+    dev: false
+
   /new-github-issue-url/0.2.1:
     resolution: {integrity: sha512-md4cGoxuT4T4d/HDOXbrUHkTKrp/vp+m3aOA7XXVYwNsUNMK49g3SQicTSeV5GIz/5QVGAeYRAOlyp9OvlgsYA==}
     engines: {node: '>=10'}
@@ -4720,6 +4895,13 @@ packages:
     dependencies:
       is-docker: 2.2.1
       is-wsl: 2.2.0
+    dev: false
+
+  /opentype.js/0.7.3:
+    resolution: {integrity: sha512-Veui5vl2bLonFJ/SjX/WRWJT3SncgiZNnKUyahmXCc2sa1xXW15u3R/3TN5+JFiP7RsjK5ER4HA5eWaEmV9deA==}
+    hasBin: true
+    dependencies:
+      tiny-inflate: 1.0.3
     dev: false
 
   /optional/0.1.4:
@@ -5039,6 +5221,11 @@ packages:
   /quick-lru/4.0.1:
     resolution: {integrity: sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==}
     engines: {node: '>=8'}
+    dev: false
+
+  /random-bytes/1.0.0:
+    resolution: {integrity: sha512-iv7LhNVO047HzYR3InF6pUcUsPQiHTM1Qal51DcGSuZFBil1aBBWG5eHPNek7bvILMaYJ/8RU1e8w1AMdHmLQQ==}
+    engines: {node: '>= 0.8'}
     dev: false
 
   /randombytes/2.1.0:
@@ -5387,6 +5574,10 @@ packages:
       is-fullwidth-code-point: 3.0.0
     dev: false
 
+  /sm3/1.0.3:
+    resolution: {integrity: sha512-KyFkIfr8QBlFG3uc3NaljaXdYcsbRy1KrSfc4tsQV8jW68jAktGeOcifu530Vx/5LC+PULHT0Rv8LiI8Gw+c1g==}
+    dev: false
+
   /source-map-support/0.5.21:
     resolution: {integrity: sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==}
     dependencies:
@@ -5584,6 +5775,13 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  /svg-captcha/1.4.0:
+    resolution: {integrity: sha512-/fkkhavXPE57zRRCjNqAP3txRCSncpMx3NnNZL7iEoyAtYwUjPhJxW6FQTQPG5UPEmCrbFoXS10C3YdJlW7PDg==}
+    engines: {node: '>=4.x'}
+    dependencies:
+      opentype.js: 0.7.3
+    dev: false
+
   /swagger-ui-dist/4.10.3:
     resolution: {integrity: sha512-eR4vsd7sYo0Sx7ZKRP5Z04yij7JkNmIlUQfrDQgC+xO5ABYx+waabzN+nDsQTLAJ4Z04bjkRd8xqkJtbxr3G7w==}
     dev: false
@@ -5753,6 +5951,10 @@ packages:
   /through/2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
     dev: true
+
+  /tiny-inflate/1.0.3:
+    resolution: {integrity: sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==}
+    dev: false
 
   /tmp/0.0.33:
     resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==}
@@ -6016,6 +6218,13 @@ packages:
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true
+
+  /uid-safe/2.1.5:
+    resolution: {integrity: sha512-KPHm4VL5dDXKz01UuEd88Df+KzynaohSL9fBh096KWAxSKZQDI2uBrVqtvRM4rwrIrRRKsdLNML/lnaaVSRioA==}
+    engines: {node: '>= 0.8'}
+    dependencies:
+      random-bytes: 1.0.0
+    dev: false
 
   /undici/5.0.0:
     resolution: {integrity: sha512-VhUpiZ3No1DOPPQVQnsDZyfcbTTcHdcgWej1PdFnSvOeJmOVDgiOHkunJmBLfmjt4CqgPQddPVjSWW0dsTs5Yg==}

@@ -18,3 +18,19 @@ export enum PermissionsEnum {
 
 export const DEFAULT_PAGE_NUM = 0
 export const DEFAULT_PAGE_SIZE = 9999
+
+export const TITLE_MAX_LIMIT = 24
+export const TITLE_MIN_LIMIT = 1
+export const NAME_MAX_LIMIT = 255
+export const NICKNAME_MAX_LIMIT = 24
+export const NAME_MIN_LIMIT = 2
+export const DESC_MAX_LIMIT = 255
+export const TELEPHONE_MAX_LIMIT = 15
+export const TELEPHONE_MIN_LIMIT = 7
+export const PASSWORD_MAX_LIMIT = 64
+export const PASSWORD_MIN_LIMIT = 6
+export const EMAIL_MAX_LIMIT = 128
+export const EMAIL_MIN_LIMIT = 12
+export const KEYWORD_MAX_LIMIT = 24
+
+export const COOKIE_TIMEOUT = 1000 * 60 * 60 * 8

@@ -5,13 +5,24 @@ import {ConfigModule} from "@libs/config";
 import {DbModule} from "@libs/db";
 import modules from './modules';
 import {APP_GUARD} from "@nestjs/core";
-import {AuthorizationGuard} from "@common";
+import {AuthorizationGuard, COOKIE_TIMEOUT} from "@common";
+import {SessionModule} from "nestjs-session";
+import {APP_KEY_COMPASS} from "./config";
 
 @Module({
   imports: [
     ConfigModule,
     DbModule,
     ...modules,
+    SessionModule.forRoot({
+      session: {
+        secret: APP_KEY_COMPASS,
+        cookie: {
+          maxAge: COOKIE_TIMEOUT,
+        },
+        rolling: true,
+      },
+    })
   ],
   controllers: [AppController],
   providers: [

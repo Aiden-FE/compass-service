@@ -1,3 +1,4 @@
 {
-  "ENV": "dev"
+  "ENV": "dev",
+  "COMMENT": "这里只适合放置环境配置,更私密的环境变量要通过.env文件,通过process.env来读取"
 }

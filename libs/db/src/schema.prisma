@@ -44,22 +44,20 @@ model Role {
 
 model User {
   id              String    @id @default(cuid())
-  telephone       String    @db.VarChar(64) // 手机号码
   password        String    @db.VarChar(64) // 登录密码
-  account         String?   @db.VarChar(64) // 登录账号
+  telephone       String?   @unique @db.VarChar(64) // 手机号码
+  email           String?   @unique @db.VarChar(255)
   name            String?   @db.VarChar(255) // 真实姓名
   nickname        String?   @db.VarChar(24) // 昵称
   gender          Gender?   @default(UNKOWN)
   birthday        DateTime?
-  email           String?   @db.VarChar(255)
   enabled         Boolean?  @default(true) // 账号启用状态
   lastLoginTime   DateTime? @map("last_login_time")
-  countryAreaCode String?   @default("0086") @map("country_area_code") // 号码所在国家区号
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
   roles Role[]
-  @@index([telephone, account])
+  @@index([telephone, email])
   @@map("users")
 }
 

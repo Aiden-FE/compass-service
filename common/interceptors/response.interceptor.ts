@@ -8,6 +8,7 @@ import {
 import {catchError, Observable, throwError} from 'rxjs';
 import { map } from 'rxjs/operators';
 import {ErrorResponse, ResponseCode, ResponseException, SuccessResponse} from "@common";
+import {Response} from "express";
 
 const DEFAULT_MESSAGE = 'operation succeeded';
 
@@ -19,7 +20,13 @@ export class ResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map(resp => {
+        const res = context.switchToHttp().getResponse<Response>()
         let responseData: SuccessResponse | ErrorResponse;
+        if (resp instanceof ResponseException) {
+          return res
+            .status(resp.getStatus())
+            .json(resp.getResponse())
+        }
         if (Array.isArray(resp)) {
           const [result, status, message, details] = resp;
           responseData = {
@@ -35,7 +42,11 @@ export class ResponseInterceptor implements NestInterceptor {
             message: DEFAULT_MESSAGE,
           };
         }
-        return responseData;
+        if (res.get('Content-Type') && !res.get('Content-Type').includes('application/json')) {
+          res.send(responseData.result)
+        } else {
+          res.json(responseData)
+        }
       }),
       catchError((err) => {
         console.log('catch error: ', err)

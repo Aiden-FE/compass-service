@@ -35,6 +35,12 @@
       ],
       "@libs/db/*": [
         "libs/db/src/*"
+      ],
+      "@libs/sms": [
+        "libs/sms/src"
+      ],
+      "@libs/sms/*": [
+        "libs/sms/src/*"
       ]
     }
   }
