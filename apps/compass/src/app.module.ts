@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import {ConfigModule} from "@libs/config";
-import {DbModule} from "@libs/db";
+import { ConfigModule } from '@libs/config';
+import { DbModule } from '@libs/db';
 import modules from './modules';
-import {APP_GUARD} from "@nestjs/core";
-import {AuthorizationGuard, COOKIE_TIMEOUT} from "@common";
-import {SessionModule} from "nestjs-session";
-import {APP_KEY_COMPASS} from "./config";
+import { COOKIE_TIMEOUT } from '@common';
+import { SessionModule } from 'nestjs-session';
+import { APP_KEY_COMPASS } from './config';
 
 @Module({
   imports: [
@@ -22,15 +21,9 @@ import {APP_KEY_COMPASS} from "./config";
         },
         rolling: true,
       },
-    })
+    }),
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthorizationGuard
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

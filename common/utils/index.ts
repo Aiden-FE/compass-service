@@ -1,11 +1,5 @@
 import {PaginationDto} from "@common/interface";
 import {DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE} from "@common/config";
-import { omitBy } from 'lodash-es'
-
-export function toArray <T = unknown>(data: T): T extends unknown[] ? T : T[] {
-  // @ts-ignore
-  return Array.isArray(data) ? data : [data]
-}
 
 /**
  * @description 包装分页查询参数,确保查询参数正确
@@ -44,13 +38,4 @@ export class PaginationResponse <T = unknown>{
     this.total = total
     this.result = result
   }
-}
-
-/**
- *
- * @param dataObj
- * @param ignoreValues
- */
-export function omitDataByIgnoreValues (dataObj: object, ignoreValues = [undefined, null, '']) {
-  return omitBy(dataObj, (val) => ignoreValues.includes(val))
 }

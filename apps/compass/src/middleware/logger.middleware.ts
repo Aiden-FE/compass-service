@@ -1,14 +1,14 @@
-import {Injectable, NestMiddleware} from "@nestjs/common";
-import { Request } from 'express'
-import {APP_ENV} from "../config";
-import {format} from 'date-fns'
+import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Request } from 'express';
+import { APP_ENV } from '../config';
+import { format } from 'date-fns';
 
 @Injectable()
 export default class LoggerMiddleware implements NestMiddleware {
   use(
     req: Request & { __startTime: Date | string | number },
     res: any,
-    next: (error?: any) => void
+    next: (error?: any) => void,
   ) {
     if (APP_ENV.isProd && req.method.toLocaleUpperCase() === 'GET') {
       next();

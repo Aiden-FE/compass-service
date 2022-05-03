@@ -41,6 +41,12 @@
       ],
       "@libs/sms/*": [
         "libs/sms/src/*"
+      ],
+      "@libs/email": [
+        "libs/email/src"
+      ],
+      "@libs/email/*": [
+        "libs/email/src/*"
       ]
     }
   }

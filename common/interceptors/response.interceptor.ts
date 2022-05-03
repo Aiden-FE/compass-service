@@ -49,7 +49,7 @@ export class ResponseInterceptor implements NestInterceptor {
         }
       }),
       catchError((err) => {
-        console.log('catch error: ', err)
+        console.warn('catch error: ', err)
         return throwError(() => new ResponseException({
           details: err.response?.message.join(';\n'),
           message: err.response?.message.join(';\n')

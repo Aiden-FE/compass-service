@@ -1,4 +1,5 @@
 import {IsNumber} from "class-validator";
+import {PermissionsEnum} from "@common/config";
 
 interface AbstractResponse {
   status: ResponseCode
@@ -33,4 +34,15 @@ export class PaginationDto {
   pageNum?: number
   @IsNumber()
   pageSize?: number
+}
+
+export interface SessionCompass {
+  emailCaptcha: string
+  smsCaptcha: string
+  imageCaptcha: string
+}
+
+export interface AuthorizationOptions {
+  mode: 'OR' | 'AND'
+  permissions: PermissionsEnum[]
 }

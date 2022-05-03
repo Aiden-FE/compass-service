@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { readFileSync } from "fs";
+import { readFileSync } from 'fs';
 import * as Joi from 'joi';
-import { ResponseException } from "@common";
+import { ResponseException } from '@common';
 
 export interface EnvironmentDataType {
-  ENV: string,
-  COMMENT: string,
+  ENV: string;
+  COMMENT: string;
 }
 
 @Injectable()
 export class ConfigService {
-  private environmentData: EnvironmentDataType
-  
+  private environmentData: EnvironmentDataType;
+
   constructor() {
-    this.environmentData = this.validateEnv(this.getEnvironmentData())
+    this.environmentData = this.validateEnv(this.getEnvironmentData());
   }
   /**
    * @description 获取指定key的config值
@@ -22,10 +22,10 @@ export class ConfigService {
    * @memberof ConfigService
    */
   get<T extends keyof EnvironmentDataType>(key?: T): EnvironmentDataType[T] {
-    return this.environmentData[key]
+    return this.environmentData[key];
   }
 
-  private getEnvironmentData () {
+  private getEnvironmentData() {
     try {
       const url = `${process.cwd()}/${
         process.env.NODE_ENV || 'development'
@@ -33,22 +33,24 @@ export class ConfigService {
       const json = readFileSync(url, 'utf-8');
       return JSON.parse(json);
     } catch (e) {
-      return {}
+      return {};
     }
   }
-  
-  private validateEnv(envConfig: Partial<EnvironmentDataType>): EnvironmentDataType {
+
+  private validateEnv(
+    envConfig: Partial<EnvironmentDataType>,
+  ): EnvironmentDataType {
     const envVarsSchema: Joi.ObjectSchema = Joi.object({
       ENV: Joi.string().valid('dev', 'prod').default('dev'),
-      COMMENT: Joi.string()
+      COMMENT: Joi.string(),
     });
-    
+
     const { error, value: validateEnvConfig } =
       envVarsSchema.validate(envConfig);
-    
+
     if (error) {
       throw new ResponseException({
-        message: `Config validation error: ${error.message || error}`
+        message: `Config validation error: ${error.message || error}`,
       });
     }
     return validateEnvConfig;

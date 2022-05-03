@@ -1,11 +1,5 @@
 # Compass Service
 
-## TODO List
-
-- [ ] 对接短信模板
-- [ ] 支持邮箱注册
-- [ ] 支持JWT登录授权
-
 ## Development Feature
 
 - [x] [Typescript](https://www.tslang.cn/index.html)
@@ -44,6 +38,9 @@ DATABASE_URL="mysql://demo:demo123456@localhost:3306/dbname"
 # 阿里云短信服务Access
 ACCESS_KEY_ID="短信ak id字符串"
 ACCESS_KEY_SECRET="短信ak secret字符串"
+# 邮箱授权账号及密钥
+EMAIL_AUTH_USER="demo@demo.com"
+EMAIL_AUTH_PASSWORD="demo123456"
 ```
 
 ### 环境部署

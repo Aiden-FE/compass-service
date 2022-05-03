@@ -1,13 +1,13 @@
 export interface AliCloudSMSConstructor {
-  accessKeyId: string
-  accessKeySecret: string
+  accessKeyId: string;
+  accessKeySecret: string;
   /** default = dysmsapi.aliyuncs.com */
-  endpoint?: string
+  endpoint?: string;
 }
 
 export interface SendSMSParams {
-  signName?: string
-  templateCode: string
-  phoneNumbers: string
-  templateParam?: Record<string, string>
+  signName?: string;
+  templateCode: string;
+  phoneNumbers: string;
+  templateParam?: Record<string, string>;
 }

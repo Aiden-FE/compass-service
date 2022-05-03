@@ -1,21 +1,33 @@
-import {IsNumberString, IsPhoneNumber, IsString} from "class-validator";
+import {
+  IsEmail,
+  IsNumberString,
+  IsPhoneNumber,
+  IsString,
+} from 'class-validator';
 
 export class CreateCaptchaDto {
   @IsNumberString()
-  width?: number
+  width?: number;
   @IsNumberString()
-  height?: number
+  height?: number;
   @IsNumberString()
-  fontSize?: number
+  fontSize?: number;
   @IsNumberString()
-  noise?: number
+  noise?: number;
   @IsString()
-  background?: string
+  background?: string;
 }
 
 export class SendSMSCaptchaDto {
   @IsPhoneNumber()
-  telephone: string
+  telephone: string;
   @IsString()
-  imageCaptcha: string
+  imageCaptcha: string;
+}
+
+export class SendEmailCaptchaDto {
+  @IsEmail()
+  email: string;
+  @IsString()
+  imageCaptcha: string;
 }
