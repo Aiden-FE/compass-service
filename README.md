@@ -36,11 +36,11 @@ prisma-docs-generator serve # 基于当前generate的结果 启动文档服务
 # 参考prisma所需的数据库连接
 DATABASE_URL="mysql://demo:demo123456@localhost:3306/dbname"
 # 阿里云短信服务Access
-ACCESS_KEY_ID="短信ak id字符串"
-ACCESS_KEY_SECRET="短信ak secret字符串"
+ALI_CLOUD_SMS_ACCESS_KEY_ID="短信ak id字符串"
+ALI_CLOUD_SMS_ACCESS_KEY_SECRET="短信ak secret字符串"
 # 邮箱授权账号及密钥
-EMAIL_AUTH_USER="demo@demo.com"
-EMAIL_AUTH_PASSWORD="demo123456"
+MY_EMAIL_AUTH_USER="demo@demo.com"
+MY_EMAIL_AUTH_PASSWORD="demo123456"
 ```
 
 ### 环境部署

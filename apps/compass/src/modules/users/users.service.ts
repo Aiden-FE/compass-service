@@ -5,12 +5,12 @@ import {
   UserPhoneRegisterDto,
   UsersListQueryDto,
   UserUpdatePrivacyDto,
+  UserModel,
 } from './users.dto';
 import { encodePhoneNumber, useMd5EncodeContent } from '@compass-aiden/utils';
 import { APP_KEY_COMPASS } from '../../config';
 import { format } from 'date-fns';
 import { PaginationResponse, wrapPaginationQuery } from '@common';
-import { User } from '@prisma/client';
 import { uniq } from 'lodash';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class UsersService {
   updateUserInfo(
     id: string,
     data: Partial<
-      Omit<User, 'birthday'> & { roles?: number[]; birthday: string }
+      Omit<UserModel, 'birthday'> & { roles?: number[]; birthday: string }
     >,
   ) {
     return this.dbService.user.update({
@@ -67,7 +67,7 @@ export class UsersService {
     });
   }
 
-  async getUserInfoByParams(params: Partial<User>, joinPermissions = false) {
+  async getUserInfoByParams(params: Partial<UserModel>, joinPermissions = false) {
     const userInfo = await this.dbService.user.findFirst({
       where: params,
       select: {

@@ -11,11 +11,10 @@ import {
 } from '@nestjs/common';
 import {
   PermissionCreateDto,
-  OwnerApp,
   PermissionUpdateDto,
 } from './permissions.dto';
 import { PermissionsService } from './permissions.service';
-import { Authorization, AuthorizationGuard, PermissionsEnum } from '@common';
+import { Authorization, AuthorizationGuard, PermissionsEnum, OwnerAppType } from '@common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -30,7 +29,7 @@ export class PermissionsController {
   @Authorization(PermissionsEnum.COMMON_PERMISSION_CREATE)
   @Post()
   async create(
-    @Headers('owner_app') owner: OwnerApp,
+    @Headers('owner_app') owner: OwnerAppType,
     @Body() body: PermissionCreateDto,
   ) {
     return this.permissionsService.createPermission({
@@ -72,7 +71,7 @@ export class PermissionsController {
   })
   @Authorization(PermissionsEnum.COMMON_PERMISSION_QUERY)
   @Get()
-  async getPermissionsInfo(@Headers('owner_app') owner: OwnerApp) {
+  async getPermissionsInfo(@Headers('owner_app') owner: OwnerAppType) {
     const list = await this.permissionsService.getPermissionsInfo(owner);
     return [list];
   }

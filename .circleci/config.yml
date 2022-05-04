@@ -21,18 +21,6 @@ jobs:
             - v1-dependencies-
       - run:
           command: |
-            echo `DATABASE_URL="${DATABASE_URL}"
-              ALI_CLOUD_ACCESS_KEY_ID="${ALI_CLOUD_SMS_ACCESS_KEY_ID}"
-              ALI_CLOUD_ACCESS_KEY_SECRET="${ALI_CLOUD_SMS_ACCESS_KEY_SECRET}"
-              EMAIL_AUTH_USER="${MY_EMAIL_AUTH_USER}"
-              EMAIL_AUTH_PASSWORD="${MY_EMAIL_AUTH_PASSWORD}"
-              ` > .env
-            echo $DATABASE_URL
-            echo $ALI_CLOUD_SMS_ACCESS_KEY_ID
-            echo $ALI_CLOUD_SMS_ACCESS_KEY_SECRET
-            echo $MY_EMAIL_AUTH_USER
-            echo $MY_EMAIL_AUTH_PASSWORD
-            node debug.js
             npm install
             npx prisma generate
             npm run build
@@ -56,7 +44,7 @@ jobs:
       - run:
           command: |
             docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-            docker build . -t $DOCKERHUB_USERNAME/compass:$CIRCLE_TAG --build-arg DATABASE_URL=$DATABASE_URL --build-arg ALI_CLOUD_SMS_ACCESS_KEY_ID=$ALI_CLOUD_SMS_ACCESS_KEY_ID --build-arg ALI_CLOUD_SMS_ACCESS_KEY_SECRET=$ALI_CLOUD_SMS_ACCESS_KEY_SECRET --build-arg MY_EMAIL_AUTH_USER=$MY_EMAIL_AUTH_USER --build-arg MY_EMAIL_AUTH_PASSWORD=$MY_EMAIL_AUTH_PASSWORD
+            docker build -t $DOCKERHUB_USERNAME/compass:$CIRCLE_TAG .
             docker push $DOCKERHUB_USERNAME/compass:$CIRCLE_TAG
 
 # Invoke jobs via workflows
