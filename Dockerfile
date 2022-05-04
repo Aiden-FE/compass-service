@@ -3,7 +3,7 @@
 FROM node:12.22.12-slim
 MAINTAINER Aiden FE <Aiden_FE@outlook.com>
 
-ENV APP_DIR=/compass
+ENV APP_DIR=/root/compass
 
 # The RUN instruction will execute any commands
 # Adding HelloWorld page into Nginx server
