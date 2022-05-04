@@ -11,8 +11,8 @@ ENV APP_DIR=/root/compass
 # Adding HelloWorld page into Nginx server
 
 RUN mkdir -p "${APP_DIR}" \
-    apt-get -qy update \
-    apt-get -qy install openssl \
+    apt-get -q -y update \
+    apt-get -q -y install openssl \
     npm config set registry https://registry.npmmirror.com/ \
     npm install \
     npx prisma generate
