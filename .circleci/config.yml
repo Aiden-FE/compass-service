@@ -43,7 +43,7 @@ jobs:
       - run:
           command: |
             docker login -u $ALI_CLOUD_DOCKER_USERNAME -p $ALI_CLOUD_DOCKER_PASSWORD registry.cn-shanghai.aliyuncs.com
-            docker build -t $ALI_CLOUD_DOCKER_USERNAME/compass:latest .
+            docker build -t registry.cn-shanghai.aliyuncs.com/$ALI_CLOUD_DOCKER_USERNAME/compass:latest .
             docker push registry.cn-shanghai.aliyuncs.com/$ALI_CLOUD_DOCKER_USERNAME/compass:latest
 
 # Invoke jobs via workflows
