@@ -11,10 +11,9 @@ ENV APP_DIR=/root/compass
 # Adding HelloWorld page into Nginx server
 
 RUN mkdir -p "${APP_DIR}" \
-    pwd \
     npm config set registry https://registry.npmmirror.com/ \
     npm install \
-    node debug.js
+    npx prisma generate
 
 WORKDIR ${APP_DIR}
 COPY . ${APP_DIR}
