@@ -27,8 +27,14 @@ jobs:
               EMAIL_AUTH_USER="${MY_EMAIL_AUTH_USER}"
               EMAIL_AUTH_PASSWORD="${MY_EMAIL_AUTH_PASSWORD}"
               ` > .env
-            cat .env
+            echo $DATABASE_URL
+            echo $ALI_CLOUD_SMS_ACCESS_KEY_ID
+            echo $ALI_CLOUD_SMS_ACCESS_KEY_SECRET
+            echo $MY_EMAIL_AUTH_USER
+            echo $MY_EMAIL_AUTH_PASSWORD
+            node debug.js
             npm install
+            npx prisma generate
             npm run build
             echo $CIRCLE_TAG
       - save_cache:
