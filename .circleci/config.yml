@@ -29,7 +29,7 @@ jobs:
               ` > .env
             cat .env
             yarn install
-            prisma generate
+            node_modules/.bin/prisma generate
             yarn build
             echo $CIRCLE_TAG
       - save_cache:
