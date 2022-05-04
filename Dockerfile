@@ -9,7 +9,7 @@ ENV APP_DIR=/compass
 # Adding HelloWorld page into Nginx server
 RUN mkdir -p "${APP_DIR}" \
     && ls \
-    && ls dist
+    && ls ${APP_DIR}
 
 WORKDIR ${APP_DIR}
 COPY . ${APP_DIR}
