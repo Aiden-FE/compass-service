@@ -35,3 +35,7 @@ workflows:
   build-and-publish-image:
     jobs:
       - build
+      - docker/publish:
+          image: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+          dockerfile: Dockerfile
+          path: deploy
