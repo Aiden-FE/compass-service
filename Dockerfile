@@ -8,7 +8,7 @@ ENV APP_DIR=/root/compass
 # The RUN instruction will execute any commands
 # Adding HelloWorld page into Nginx server
 RUN mkdir -p "${APP_DIR}" \
-    ls ${APP_DIR}
+    npm install
 
 WORKDIR ${APP_DIR}
 COPY . ${APP_DIR}
