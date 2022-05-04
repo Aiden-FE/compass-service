@@ -11,6 +11,8 @@ ENV APP_DIR=/root/compass
 # Adding HelloWorld page into Nginx server
 
 RUN mkdir -p "${APP_DIR}" \
+    apt-get -qy update \
+    apt-get -qy install openssl \
     npm config set registry https://registry.npmmirror.com/ \
     npm install \
     npx prisma generate
@@ -21,4 +23,4 @@ COPY . ${APP_DIR}
 # The EXPOSE instruction informs Docker that the container listens on the specified network ports at runtime
 EXPOSE 8080
 
-# CMD ["npm", "run", "start:prod"]
+ CMD ["npm", "run", "start:prod"]
