@@ -1,8 +1,7 @@
 # Use the latest 2.1 version of CircleCI pipeline process engine.
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-orbs:
-  docker: circleci/docker@1.7.0
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -10,24 +9,50 @@ jobs:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
-      - image: docker378928518/fe-static:1.0.0-slim
+      - image: node:12.22.12-slim
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    working_directory: ~/compass
     steps:
       - checkout
       - restore_cache:
           keys:
-          - dependencies-
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
       - run:
-          name: "Install depends"
-          command: "yarn install"
+          command: |
+            echo `DATABASE_URL="${DATABASE_URL}"
+              ALI_CLOUD_ACCESS_KEY_ID="${ALI_CLOUD_SMS_ACCESS_KEY_ID}"
+              ALI_CLOUD_ACCESS_KEY_SECRET="${ALI_CLOUD_SMS_ACCESS_KEY_SECRET}"
+              EMAIL_AUTH_USER="${MY_EMAIL_AUTH_USER}"
+              EMAIL_AUTH_PASSWORD="${MY_EMAIL_AUTH_PASSWORD}"
+              ` > .env
+            cat .env
+            yarn install
+            prisma generate
+            yarn build
+            echo $CIRCLE_TAG
       - save_cache:
           paths:
             - node_modules
-          key: dependencies-
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - persist_to_workspace:
+          root: ~/compass
+          paths:
+            - dist
+            - package.json
+            - Dockerfile
+  publish docker:
+    machine: true
+    working_directory: ~/compass
+    steps:
+      - attach_workspace:
+          at: .
       - run:
-          name: "build"
-          command: "yarn build"
+          command: |
+            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+            docker build -t $DOCKERHUB_USERNAME/compass:$CIRCLE_TAG --build-arg DATABASE_URL=$DATABASE_URL --build-arg ALI_CLOUD_SMS_ACCESS_KEY_ID=$ALI_CLOUD_SMS_ACCESS_KEY_ID --build-arg ALI_CLOUD_SMS_ACCESS_KEY_SECRET=$ALI_CLOUD_SMS_ACCESS_KEY_SECRET --build-arg MY_EMAIL_AUTH_USER=$MY_EMAIL_AUTH_USER --build-arg MY_EMAIL_AUTH_PASSWORD=$MY_EMAIL_AUTH_PASSWORD .
+            docker push $DOCKERHUB_USERNAME/compass:$CIRCLE_TAG
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -35,7 +60,6 @@ workflows:
   build-and-publish-image:
     jobs:
       - build
-      - docker/publish:
-          image: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
-          dockerfile: Dockerfile
-          path: deploy
+      - publish docker:
+          requires:
+            - build
