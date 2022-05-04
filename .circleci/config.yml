@@ -22,7 +22,6 @@ jobs:
       - run:
           command: |
             npm install
-            npx prisma generate
             npm run build
             echo $CIRCLE_TAG
       - save_cache:
