@@ -12,9 +12,9 @@ ENV APP_DIR=/root/compass
 WORKDIR ${APP_DIR}
 
 RUN npm config set registry https://registry.npmmirror.com/ \
-    npm install
+    ls
 
 # The EXPOSE instruction informs Docker that the container listens on the specified network ports at runtime
 EXPOSE 8080
 
-CMD ["npm", "run", "start:prod"]
+# CMD ["npm", "run", "start:prod"]
