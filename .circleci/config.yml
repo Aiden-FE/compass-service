@@ -23,7 +23,6 @@ jobs:
           command: |
             npm install
             npm run build
-            node debug.js
       - save_cache:
           paths:
             - node_modules
