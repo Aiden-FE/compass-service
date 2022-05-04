@@ -28,9 +28,8 @@ jobs:
               EMAIL_AUTH_PASSWORD="${MY_EMAIL_AUTH_PASSWORD}"
               ` > .env
             cat .env
-            yarn install
-            npx prisma generate
-            yarn build
+            npm install
+            npm build
             echo $CIRCLE_TAG
       - save_cache:
           paths:
