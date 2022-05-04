@@ -21,6 +21,7 @@ jobs:
             - v1-dependencies-
       - run:
           command: |
+            npm config set registry https://registry.npmmirror.com/
             npm install
             npm run build
       - save_cache:
@@ -31,7 +32,6 @@ jobs:
           root: ~/compass
           paths:
             - dist
-            - node_modules
             - package.json
             - Dockerfile
   publish docker:

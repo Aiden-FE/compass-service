@@ -3,12 +3,16 @@
 FROM node:12.22.12-slim
 MAINTAINER Aiden FE <Aiden_FE@outlook.com>
 
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 ENV APP_DIR=/root/compass
 
 # The RUN instruction will execute any commands
 # Adding HelloWorld page into Nginx server
-
 WORKDIR ${APP_DIR}
+
+RUN npm config set registry https://registry.npmmirror.com/ \
+    npm install
 
 # The EXPOSE instruction informs Docker that the container listens on the specified network ports at runtime
 EXPOSE 8080
