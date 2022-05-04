@@ -7,9 +7,7 @@ ENV APP_DIR=/compass
 
 # The RUN instruction will execute any commands
 # Adding HelloWorld page into Nginx server
-RUN mkdir -p "${APP_DIR}" \
-    && ls \
-    && ls ${APP_DIR}
+RUN mkdir -p "${APP_DIR}"
 
 WORKDIR ${APP_DIR}
 COPY . ${APP_DIR}
