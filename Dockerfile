@@ -13,11 +13,11 @@ ENV APP_DIR=/root/compass
 WORKDIR ${APP_DIR}
 COPY . ${APP_DIR}
 
-RUN apt-get -q -y update \
-    apt-get -q -y install openssl \
+RUN sudo apt-get -q -y update \
+    sudo apt-get -q -y install openssl \
     npm config set registry https://registry.npmmirror.com/ \
     npm install \
-    npx prisma generate \
+    npx prisma generate
 
 # The EXPOSE instruction informs Docker that the container listens on the specified network ports at runtime
 EXPOSE 8080
