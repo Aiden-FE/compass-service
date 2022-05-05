@@ -47,7 +47,7 @@ jobs:
       - run:
           command: |
             docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-            docker build -t $DOCKERHUB_USERNAME/compass:latest .
+            docker build -t $DOCKERHUB_USERNAME/compass:latest . --build-arg DATABASE_URL=$DATABASE_URL --build-arg ALI_CLOUD_SMS_ACCESS_KEY_ID=$ALI_CLOUD_SMS_ACCESS_KEY_ID --build-arg ALI_CLOUD_SMS_ACCESS_KEY_SECRET=$ALI_CLOUD_SMS_ACCESS_KEY_SECRET --build-arg MY_EMAIL_AUTH_USER=$MY_EMAIL_AUTH_USER --build-arg MY_EMAIL_AUTH_PASSWORD=$MY_EMAIL_AUTH_PASSWORD
             docker push $DOCKERHUB_USERNAME/compass:latest
 
 # Invoke jobs via workflows
