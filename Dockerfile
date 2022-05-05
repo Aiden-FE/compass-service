@@ -23,4 +23,4 @@ WORKDIR ${APP_DIR}
 # The EXPOSE instruction informs Docker that the container listens on the specified network ports at runtime
 EXPOSE 8080
 
-CMD ["npm", "run", "start:prod"]
+#CMD ["npm", "run", "start:prod"]

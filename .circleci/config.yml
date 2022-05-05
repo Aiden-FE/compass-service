@@ -15,9 +15,6 @@ jobs:
     working_directory: ~/compass
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-
       - run:
           command: |
             apt-get -q -y update
@@ -26,16 +23,10 @@ jobs:
             npm install
             npx prisma generate
             npm run build
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-
       - persist_to_workspace:
           root: ~/compass
           paths:
             - dist
-            - libs
-            - node_modules
             - package.json
             - Dockerfile
   publish docker:
