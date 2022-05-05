@@ -15,20 +15,26 @@ jobs:
     working_directory: ~/compass
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
       - run:
           command: |
             apt-get update
             apt-get -q -y install openssl
             npm config set registry https://registry.npmmirror.com/
             npm install
-            npx prisma generate
             npm run build
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
       - persist_to_workspace:
           root: ~/compass
           paths:
             - dist
             - libs
-            - node_modules
             - package.json
             - Dockerfile
   publish docker:
