@@ -16,12 +16,6 @@ RUN apt-get install openssl -q -y
 
 COPY . ${APP_DIR}
 
-RUN npm config set registry https://registry.npmmirror.com/
-RUN npm install
-
-RUN echo "==============================>"
-RUN ls ${APP_DIR}
-
 # The EXPOSE instruction informs Docker that the container listens on the specified network ports at runtime
 EXPOSE 8080
 
