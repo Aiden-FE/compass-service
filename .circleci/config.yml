@@ -27,6 +27,7 @@ jobs:
           root: ~/compass
           paths:
             - dist
+            - libs
             - package.json
             - Dockerfile
   publish docker:
