@@ -36,6 +36,7 @@ jobs:
             - dist
             - libs
             - package.json
+            - start.sh
             - Dockerfile
   publish docker:
     machine: true
