@@ -14,12 +14,10 @@ WORKDIR ${APP_DIR}
 RUN apt-get update
 RUN apt-get install openssl -q -y
 
+COPY . ${APP_DIR}
+
 RUN npm config set registry https://registry.npmmirror.com/
 RUN npm install
-
-RUN ls
-
-COPY . ${APP_DIR}
 
 RUN echo "==============================>"
 RUN ls ${APP_DIR}
