@@ -15,7 +15,7 @@ RUN apt-get update
 RUN apt-get install openssl -q -y
 
 RUN npm config set registry https://registry.npmmirror.com/ \
-    npm install
+    && npm install
 
 COPY . ${APP_DIR}
 
