@@ -28,6 +28,7 @@ jobs:
           paths:
             - dist
             - libs
+            - node_modules
             - package.json
             - Dockerfile
   publish docker:
