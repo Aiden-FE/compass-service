@@ -13,8 +13,7 @@ ENV APP_DIR=/root/compass
 WORKDIR ${APP_DIR}
 COPY . ${APP_DIR}
 
-RUN mkdir -p "${APP_DIR}" \
-    apt-get -q -y update \
+RUN apt-get -q -y update \
     apt-get -q -y install openssl \
     npm config set registry https://registry.npmmirror.com/ \
     npm install \
