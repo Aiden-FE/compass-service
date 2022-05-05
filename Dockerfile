@@ -13,8 +13,8 @@ ENV APP_DIR=/root/compass
 WORKDIR ${APP_DIR}
 COPY . ${APP_DIR}
 
-RUN sudo apt-get -q -y update \
-    sudo apt-get -q -y install openssl \
+RUN sudo apt-get update -q -y\
+    sudo apt-get install openssl -q -y \
     npm config set registry https://registry.npmmirror.com/ \
     npm install \
     npx prisma generate
