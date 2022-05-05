@@ -18,7 +18,7 @@ ENV APP_DIR=/root/compass
 #    npx prisma generate
 
 WORKDIR ${APP_DIR}
-#COPY . ${APP_DIR}
+COPY . ${APP_DIR}
 
 # The EXPOSE instruction informs Docker that the container listens on the specified network ports at runtime
 EXPOSE 8080
