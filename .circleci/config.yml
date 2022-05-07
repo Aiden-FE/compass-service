@@ -60,7 +60,5 @@ workflows:
           requires:
             - build
           filters:
-            tags:
-              only: /^v.*/ # 仅在打tag时执行
             branches:
-              ignore: /.*/
+              only: master
