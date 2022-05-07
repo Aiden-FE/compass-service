@@ -36,11 +36,11 @@ prisma-docs-generator serve # 基于当前generate的结果 启动文档服务
 # 参考prisma所需的数据库连接
 DATABASE_URL="mysql://demo:demo123456@localhost:3306/dbname"
 # 阿里云短信服务Access
-ACCESS_KEY_ID="短信ak id字符串"
-ACCESS_KEY_SECRET="短信ak secret字符串"
+ALI_CLOUD_SMS_ACCESS_KEY_ID="短信ak id字符串"
+ALI_CLOUD_SMS_ACCESS_KEY_SECRET="短信ak secret字符串"
 # 邮箱授权账号及密钥
-EMAIL_AUTH_USER="demo@demo.com"
-EMAIL_AUTH_PASSWORD="demo123456"
+MY_EMAIL_AUTH_USER="demo@demo.com"
+MY_EMAIL_AUTH_PASSWORD="demo123456"
 ```
 
 ### 环境部署
@@ -49,6 +49,9 @@ EMAIL_AUTH_PASSWORD="demo123456"
 cd deploy
 docker compose up -d # 启动redis与mysql数据库 (已存在可忽略,供参考)
 docker compose down # 移除启动的redis与mysql容器
+
+docker pull docker378928518/compass:latest # 拉取已发布镜像
+docker run -d --name compass -p 8080:8080 docker378928518/compass:latest # 运行镜像
 ```
 
 

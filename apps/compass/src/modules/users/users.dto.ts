@@ -27,8 +27,18 @@ import {
   TELEPHONE_MAX_LIMIT,
   TELEPHONE_MIN_LIMIT,
 } from '@common';
-import type { Gender } from '@prisma/client';
-import { Gender as GenderEnum } from '@prisma/client';
+
+export const Gender: {
+  WOMEN: 'WOMEN',
+  MEN: 'MEN',
+  UNKOWN: 'UNKOWN'
+} = {
+  WOMEN: 'WOMEN',
+  MEN: 'MEN',
+  UNKOWN: 'UNKOWN'
+}
+
+export type GenderEnum = (typeof Gender)[keyof typeof Gender]
 
 export class UserPhoneRegisterDto {
   @IsPhoneNumber()
@@ -65,8 +75,8 @@ export class UserUpdateDto {
   @MaxLength(NICKNAME_MAX_LIMIT)
   @MinLength(NAME_MIN_LIMIT)
   nickname?: string;
-  @IsIn(Object.values(GenderEnum))
-  gender?: Gender;
+  @IsIn(Object.values(Gender))
+  gender?: GenderEnum;
   @IsDateString()
   birthday?: string;
   @IsBoolean()
@@ -101,4 +111,19 @@ export class UsersListQueryDto extends PaginationDto {
   @MaxLength(KEYWORD_MAX_LIMIT)
   @IsString()
   keyword?: string;
+}
+
+export type UserModel = {
+  id: string
+  password: string
+  telephone: string | null
+  email: string | null
+  name: string | null
+  nickname: string | null
+  gender: GenderEnum | null
+  birthday: Date | null
+  enabled: boolean | null
+  lastLoginTime: Date | null
+  createdAt: Date
+  updatedAt: Date
 }

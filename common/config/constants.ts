@@ -34,6 +34,6 @@ export const EMAIL_MIN_LIMIT = 12
 export const KEYWORD_MAX_LIMIT = 24
 export const CAPTCHA_NUMBER_MAX_LIMIT = 999999
 export const CAPTCHA_NUMBER_MIN_LIMIT = 100000
-
+export const URL_MAX_LIMIT = 2048
 export const COOKIE_TIMEOUT = 1000 * 60 * 5
 export const LOGIN_TIMEOUT = 1000 * 60 * 60 * 8

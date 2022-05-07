@@ -7,13 +7,13 @@ import { EmailModule } from '@libs/email';
 @Module({
   imports: [
     SMSModule.forRoot({
-      accessKeyId: process.env.ALI_CLOUD_ACCESS_KEY_ID,
-      accessKeySecret: process.env.ALI_CLOUD_ACCESS_KEY_SECRET,
+      accessKeyId: process.env.ALI_CLOUD_SMS_ACCESS_KEY_ID,
+      accessKeySecret: process.env.ALI_CLOUD_SMS_ACCESS_KEY_SECRET,
     }),
     EmailModule.forRoot({
       auth: {
-        user: process.env.EMAIL_AUTH_USER,
-        pass: process.env.EMAIL_AUTH_PASSWORD,
+        user: process.env.MY_EMAIL_AUTH_USER,
+        pass: process.env.MY_EMAIL_AUTH_PASSWORD,
       },
     }),
   ],

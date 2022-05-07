@@ -11,6 +11,6 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return this.appService.getHello() + this.configService.get('ENV');
+    return this.appService.getHello() + new Date().toString();
   }
 }

@@ -14,6 +14,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(24)
+  description String?  @db.VarChar(255)
+  parentId    Int?     @map("parent_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([name])
+  @@map("categories")
+  bookmark   Bookmark? @relation(fields: [bookmarkId], references: [id])
+  bookmarkId Int?
+}
+
+model Bookmark {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(24)
+  url         String   @db.VarChar(2048)
+  heat        Int      @default(0)
+  lastUseDate DateTime @default(now()) @map("last_use_date")
+  description String?  @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  categories Category[]
+
+  @@index([name])
+  @@map("bookmarks")
+}
+
 model Permission {
   id          Int      @id @default(autoincrement())
   key         String   @unique @db.VarChar(128)
@@ -43,18 +73,18 @@ model Role {
 }
 
 model User {
-  id              String    @id @default(cuid())
-  password        String    @db.VarChar(64) // 登录密码
-  telephone       String?   @unique @db.VarChar(64) // 手机号码
-  email           String?   @unique @db.VarChar(255)
-  name            String?   @db.VarChar(255) // 真实姓名
-  nickname        String?   @db.VarChar(24) // 昵称
-  gender          Gender?   @default(UNKOWN)
-  birthday        DateTime?
-  enabled         Boolean?  @default(true) // 账号启用状态
-  lastLoginTime   DateTime? @map("last_login_time")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  id            String    @id @default(cuid())
+  password      String    @db.VarChar(64) // 登录密码
+  telephone     String?   @unique @db.VarChar(64) // 手机号码
+  email         String?   @unique @db.VarChar(255)
+  name          String?   @db.VarChar(255) // 真实姓名
+  nickname      String?   @db.VarChar(24) // 昵称
+  gender        Gender?   @default(UNKOWN)
+  birthday      DateTime?
+  enabled       Boolean?  @default(true) // 账号启用状态
+  lastLoginTime DateTime? @map("last_login_time")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
 
   roles Role[]
   @@index([telephone, email])

@@ -1,7 +1,5 @@
 import { MaxLength, MinLength } from 'class-validator';
 
-export type { OwnerApp } from '@prisma/client';
-
 export class PermissionCreateDto {
   @MaxLength(128)
   @MinLength(2)
