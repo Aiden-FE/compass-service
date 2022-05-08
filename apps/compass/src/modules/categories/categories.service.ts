@@ -2,14 +2,16 @@ import { Injectable } from '@nestjs/common';
 import {CategoriesCreateDto, CategoriesQueryDto, CategoriesUpdateDto} from "./categories.dto";
 import {DbService} from "@libs/db";
 import {PaginationResponse, ResponseException, wrapPaginationQuery} from "@common";
+import {UserModel} from "../users/users.dto";
 
 @Injectable()
 export class CategoriesService {
   constructor(private dbService: DbService) {}
-  async findCategories (data: CategoriesQueryDto) {
+  async findCategories (data: CategoriesQueryDto, user: UserModel) {
     const [total, categories] = await this.dbService.$transaction([
       this.dbService.category.count({
         where: {
+          userId: user.id,
           name: {
             contains: data.keyword
           }
@@ -18,6 +20,7 @@ export class CategoriesService {
       this.dbService.category.findMany({
         ...wrapPaginationQuery(data),
         where: {
+          userId: user.id,
           name: {
             contains: data.keyword
           }
@@ -32,45 +35,66 @@ export class CategoriesService {
     return new PaginationResponse(categories, data, total)
   }
   
-  findCategory (id: number) {
+  findCategory (id: number, user: UserModel) {
     return this.dbService.category.findFirst({
-      where: {id},
+      where: {id, userId: user.id},
       include: {
         bookmarks: true
       }
     })
   }
   
-  async updateCategory (id: number, data: CategoriesUpdateDto) {
-    const category = await this.dbService.category.findFirst({
-      where: {id: data.parentId}
-    })
-    return this.dbService.category.update({
-      where: {id},
+  async updateCategory (id: number, data: CategoriesUpdateDto, user: UserModel) {
+    return this.dbService.category.updateMany({
+      where: {id, userId: user.id},
       data: {
         ...data,
         directory: data.parentId
-          ? await this.getDirectory(data, category)
+          ? await this.getDirectory(data)
           : undefined
       }
     })
   }
   
-  deleteCategory (id: number) {
-    const children = this.dbService.category.findFirst({where: {parentId: id}})
+  deleteCategory (id: number, user: UserModel) {
+    const children = this.dbService.category.findFirst({
+      where: {
+        parentId: id,
+        userId: user.id
+      }
+    })
     if (children) {
       return new ResponseException("存在子节点,不可删除")
     }
-    return this.dbService.category.delete({where: {id}})
+    return this.dbService.category.deleteMany({
+      where: {
+        id,
+        userId: user.id
+      }
+    })
   }
   
-  async createCategory (data: CategoriesCreateDto) {
+  async createCategory (data: CategoriesCreateDto, user: UserModel) {
     const insertData: CategoriesCreateDto & {directory: string} = {
       ...data,
-      directory: await this.getDirectory(data)
+      directory: await this.getDirectory(data),
+    }
+    if (insertData.parentId && insertData.parentId !== -1) {
+      const parentCategory = await this.dbService.category.findFirst({
+        where: {
+          id: insertData.parentId,
+          userId: user.id
+        }
+      })
+      if (!parentCategory) {
+        return new ResponseException('不存在目标父级分类')
+      }
     }
     return this.dbService.category.create({
-      data: insertData
+      data: {
+        ...insertData,
+        userId: user.id
+      }
     })
   }
   
