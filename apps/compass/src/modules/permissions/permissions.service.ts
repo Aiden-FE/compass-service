@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from '@libs/db';
-import {
-  PermissionCreateDto,
-  PermissionUpdateDto,
-} from './permissions.dto';
 import { OwnerApp, OwnerAppType } from '@common';
+import { PermissionCreateDto, PermissionUpdateDto } from './permissions.dto';
 
 @Injectable()
 export class PermissionsService {
@@ -25,7 +22,7 @@ export class PermissionsService {
   updatePermission(key: string, data: PermissionUpdateDto) {
     return this.dbService.permission.update({
       where: { key },
-      data: data,
+      data,
     });
   }
 

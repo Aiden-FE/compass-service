@@ -25,8 +25,10 @@ export class RolesUpdateDto {
   @MaxLength(24)
   @MinLength(2)
   name?: string;
+
   @MaxLength(255)
   description?: string;
+
   @IsArray()
   permissions?: PermissionsEnum[];
 }

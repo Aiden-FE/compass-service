@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@libs/config';
 import { DbModule } from '@libs/db';
-import modules from './modules';
 import { COOKIE_TIMEOUT } from '@common';
 import { SessionModule } from 'nestjs-session';
+import modules from './modules';
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
 import { APP_KEY_COMPASS } from './config';
 
 @Module({

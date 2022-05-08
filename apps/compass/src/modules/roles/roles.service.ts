@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from '@libs/db';
-import { RolesCreateDto, RolesListQueryDto, RolesUpdateDto } from './roles.dto';
 import { PaginationResponse, wrapPaginationQuery } from '@common';
+import { RolesCreateDto, RolesListQueryDto, RolesUpdateDto } from './roles.dto';
 
 @Injectable()
 export class RolesService {

@@ -1,10 +1,10 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import injectSwaggerPlugin from './swagger.plugin';
 import * as compression from 'compression';
 import helmet from 'helmet';
-import { APP_ENV } from '../config';
 import { DbService } from '@libs/db';
 import { HttpExceptionFilter, ResponseInterceptor } from '@common';
+import { APP_ENV } from '../config';
+import injectSwaggerPlugin from './swagger.plugin';
 
 /**
  * @description 注入全局插件

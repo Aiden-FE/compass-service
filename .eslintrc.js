@@ -2,12 +2,13 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: 'tsconfig.json',
-    tsconfigRootDir : __dirname, 
+    tsconfigRootDir : __dirname,
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [
-    'plugin:@typescript-eslint/recommended',
+    'airbnb-base',
+    'airbnb-typescript/base',
     'plugin:prettier/recommended',
   ],
   root: true,
@@ -21,5 +22,12 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    'import/prefer-default-export': 'off',
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+    'class-methods-use-this': 'off',
+    "max-classes-per-file": ["error", 10],
+    'no-param-reassign': 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
   },
 };

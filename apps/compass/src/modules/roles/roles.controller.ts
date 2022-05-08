@@ -11,15 +11,16 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Authorization, AuthorizationGuard, PermissionsEnum } from '@common';
+import { AuthGuard } from '@nestjs/passport';
 import { RolesCreateDto, RolesListQueryDto, RolesUpdateDto } from './roles.dto';
 import { RolesService } from './roles.service';
-import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('角色管理')
 @UseGuards(AuthGuard(), AuthorizationGuard)
 @Controller('roles')
 export class RolesController {
   constructor(private rolesService: RolesService) {}
+
   @ApiOperation({
     summary: '创建角色',
   })

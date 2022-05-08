@@ -29,25 +29,27 @@ import {
 } from '@common';
 
 export const Gender: {
-  WOMEN: 'WOMEN',
-  MEN: 'MEN',
-  UNKOWN: 'UNKOWN'
+  WOMEN: 'WOMEN';
+  MEN: 'MEN';
+  UNKOWN: 'UNKOWN';
 } = {
   WOMEN: 'WOMEN',
   MEN: 'MEN',
-  UNKOWN: 'UNKOWN'
-}
+  UNKOWN: 'UNKOWN',
+};
 
-export type GenderEnum = (typeof Gender)[keyof typeof Gender]
+export type GenderEnum = typeof Gender[keyof typeof Gender];
 
 export class UserPhoneRegisterDto {
   @IsPhoneNumber()
   @MaxLength(TELEPHONE_MAX_LIMIT)
   @MinLength(TELEPHONE_MIN_LIMIT)
   telephone: string;
+
   @MaxLength(PASSWORD_MAX_LIMIT)
   @MinLength(PASSWORD_MIN_LIMIT)
   password: string;
+
   @IsArray()
   roles?: number[];
 }
@@ -57,13 +59,16 @@ export class UserEmailRegisterDto {
   @MaxLength(EMAIL_MAX_LIMIT)
   @MinLength(EMAIL_MIN_LIMIT)
   email: string;
+
   @MaxLength(PASSWORD_MAX_LIMIT)
   @MinLength(PASSWORD_MIN_LIMIT)
   password: string;
+
   @IsNumber()
   @Max(CAPTCHA_NUMBER_MAX_LIMIT)
   @Min(CAPTCHA_NUMBER_MIN_LIMIT)
   emailCaptcha: number;
+
   @IsArray()
   roles?: number[];
 }
@@ -72,15 +77,20 @@ export class UserUpdateDto {
   @MaxLength(NAME_MAX_LIMIT)
   @MinLength(NAME_MIN_LIMIT)
   name?: string;
+
   @MaxLength(NICKNAME_MAX_LIMIT)
   @MinLength(NAME_MIN_LIMIT)
   nickname?: string;
+
   @IsIn(Object.values(Gender))
   gender?: GenderEnum;
+
   @IsDateString()
   birthday?: string;
+
   @IsBoolean()
   enabled?: boolean;
+
   @IsArray()
   roles?: number[];
 }
@@ -90,15 +100,19 @@ export class UserUpdatePrivacyDto {
   @MaxLength(TELEPHONE_MAX_LIMIT)
   @MinLength(TELEPHONE_MIN_LIMIT)
   telephone?: string;
+
   @MaxLength(PASSWORD_MAX_LIMIT)
   @MinLength(PASSWORD_MIN_LIMIT)
   password?: string;
+
   @IsEmail()
   email?: string;
+
   @IsNumber()
   @Max(CAPTCHA_NUMBER_MAX_LIMIT)
   @Min(CAPTCHA_NUMBER_MIN_LIMIT)
   emailCaptcha?: number;
+
   @IsNumber()
   @Max(CAPTCHA_NUMBER_MAX_LIMIT)
   @Min(CAPTCHA_NUMBER_MIN_LIMIT)
@@ -114,16 +128,16 @@ export class UsersListQueryDto extends PaginationDto {
 }
 
 export type UserModel = {
-  id: string
-  password: string
-  telephone: string | null
-  email: string | null
-  name: string | null
-  nickname: string | null
-  gender: GenderEnum | null
-  birthday: Date | null
-  enabled: boolean | null
-  lastLoginTime: Date | null
-  createdAt: Date
-  updatedAt: Date
-}
+  id: string;
+  password: string;
+  telephone: string | null;
+  email: string | null;
+  name: string | null;
+  nickname: string | null;
+  gender: GenderEnum | null;
+  birthday: Date | null;
+  enabled: boolean | null;
+  lastLoginTime: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
