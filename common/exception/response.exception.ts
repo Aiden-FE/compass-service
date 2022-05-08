@@ -10,12 +10,12 @@ export class ResponseException extends HttpException {
    * @param errorStatus 业务异常状态码
    * @param respStatus 请求异常状态码 业务异常默认请求状态200
    */
-  constructor(errorOption: Partial<ErrorResponse>, httpStatus: HttpStatus = HttpStatus.OK) {
+  constructor(errorOption: Partial<ErrorResponse> | string, httpStatus: HttpStatus = HttpStatus.OK) {
     super(
       Object.assign({
         status: ResponseCode.ERROR,
         message: 'Unknown error'
-      }, errorOption),
+      }, typeof errorOption === 'string' ? {message: errorOption} : errorOption),
       httpStatus,
     );
   }

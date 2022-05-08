@@ -1,23 +1,28 @@
 import {
   IsEmail,
-  IsNumberString,
+  IsNumberString, IsOptional,
   IsPhoneNumber,
   IsString,
 } from 'class-validator';
 
 export class CreateCaptchaDto {
+  @IsOptional()
   @IsNumberString()
   width?: number;
-
+  
+  @IsOptional()
   @IsNumberString()
   height?: number;
-
+  
+  @IsOptional()
   @IsNumberString()
   fontSize?: number;
-
+  
+  @IsOptional()
   @IsNumberString()
   noise?: number;
-
+  
+  @IsOptional()
   @IsString()
   background?: string;
 }

@@ -76,6 +76,6 @@ export class PermissionsController {
   @Get()
   async getPermissionsInfo(@Headers('owner_app') owner: OwnerAppType) {
     const list = await this.permissionsService.getPermissionsInfo(owner);
-    return [list];
+    return list;
   }
 }

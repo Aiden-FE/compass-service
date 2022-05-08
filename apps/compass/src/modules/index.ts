@@ -3,6 +3,7 @@ import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
 import { OpenModule } from './open/open.module';
 import { CategoriesModule } from './categories/categories.module';
+import {BookmarksModule} from "./bookmarks/bookmarks.module";
 
 export default [
   UsersModule,
@@ -10,4 +11,5 @@ export default [
   RolesModule,
   OpenModule,
   CategoriesModule,
+  BookmarksModule,
 ];

@@ -112,7 +112,8 @@
       "^@libs/config(|/.*)$": "<rootDir>/libs/config/src/$1",
       "^@libs/db(|/.*)$": "<rootDir>/libs/db/src/$1",
       "^@libs/sms(|/.*)$": "<rootDir>/libs/sms/src/$1",
-      "^@libs/email(|/.*)$": "<rootDir>/libs/email/src/$1"
+      "^@libs/email(|/.*)$": "<rootDir>/libs/email/src/$1",
+      "^@libs/logger(|/.*)$": "<rootDir>/libs/logger/src/$1"
     }
   }
 }

@@ -1,7 +1,7 @@
 import { KEYWORD_MAX_LIMIT, PaginationDto, PermissionsEnum } from '@common';
 import {
   IsArray,
-  IsNotEmpty,
+  IsNotEmpty, IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -14,26 +14,32 @@ export class RolesCreateDto {
   @IsString()
   name: string;
 
+  @IsOptional()
   @MaxLength(255)
   description?: string;
-
+  
+  @IsOptional()
   @IsArray()
   permissions?: PermissionsEnum[];
 }
 
 export class RolesUpdateDto {
+  @IsOptional()
   @MaxLength(24)
   @MinLength(2)
   name?: string;
-
+  
+  @IsOptional()
   @MaxLength(255)
   description?: string;
-
+  
+  @IsOptional()
   @IsArray()
   permissions?: PermissionsEnum[];
 }
 
 export class RolesListQueryDto extends PaginationDto {
+  @IsOptional()
   @MaxLength(KEYWORD_MAX_LIMIT)
   @IsString()
   keyword?: string;

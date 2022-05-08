@@ -20,7 +20,6 @@ export default async function injectGlobalPlugins(app: INestApplication) {
     new ValidationPipe({
       whitelist: true, // 非DTO属性自动移除
       transform: true, // 自动将类型转换为定义的类型
-      skipMissingProperties: true,
     }),
   );
   app.useGlobalInterceptors(new ResponseInterceptor());

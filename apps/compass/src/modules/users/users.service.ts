@@ -50,7 +50,7 @@ export class UsersService {
       where: { id },
       data: {
         ...data,
-        birthday: data.birthday !== undefined && new Date(data.birthday),
+        birthday: data.birthday ? new Date(data.birthday) : undefined,
         roles: data.roles && { set: data.roles.map((roleId) => ({ id: roleId })) },
       },
     });

@@ -41,10 +41,23 @@ export class RolesService {
     });
   }
 
-  findRoleById(id: number) {
-    return this.dbService.role.findFirst({
+  async findRoleById(id: number) {
+    const role = await this.dbService.role.findFirst({
       where: { id },
+      include: {
+        permissions: {
+          select: {
+            key: true
+          }
+        }
+      },
     });
+    if (role?.permissions) {
+      // @ts-ignore
+      role.permissions = role.permissions.map(permission => permission.key)
+      return role
+    }
+    return role
   }
 
   async findRoles(data: RolesListQueryDto) {
@@ -63,9 +76,21 @@ export class RolesService {
             contains: data.keyword,
           },
         },
+        include: {
+          permissions: {
+            select: {
+              key: true
+            }
+          }
+        },
         orderBy: [{ createdAt: 'desc' }],
       }),
     ]);
-    return new PaginationResponse(roles, data, total);
+
+    return new PaginationResponse(roles.map(role => {
+      // @ts-ignore
+      role.permissions = role.permissions.map(permission => permission.key)
+      return role
+    }), data, total);
   }
 }
