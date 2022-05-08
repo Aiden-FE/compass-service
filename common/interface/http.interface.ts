@@ -66,12 +66,12 @@ export class ResponseData<T = unknown> {
     this.options = Object.assign({
       status: ResponseCode.SUCCESS,
       message: 'Operation succeeded',
-      responseType: typeof result === 'object' && !Array.isArray(result) ? 'json' : 'unknown'
+      responseType: 'json'
     }, options)
   }
   
-  isJSON () {
-    return this.options.responseType === 'json'
+  getResponseType () {
+    return this.options.responseType
   }
   
   getStatus () {
@@ -79,7 +79,7 @@ export class ResponseData<T = unknown> {
   }
   
   getResponse () {
-    return this.isJSON() ? {
+    return this.getResponseType() === 'json' ? {
       result: this.result,
       status: this.getStatus(),
       message: this.options.message,

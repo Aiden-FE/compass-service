@@ -12,7 +12,7 @@ import {
   CAPTCHA_NUMBER_MAX_LIMIT,
   CAPTCHA_NUMBER_MIN_LIMIT,
   IS_PROD,
-  ResponseCode,
+  ResponseCode, ResponseData,
   ResponseException,
   SessionCompass,
 } from '@common';
@@ -45,7 +45,9 @@ export class OpenController {
     res.setHeader('Content-Type', 'image/svg+xml');
     // eslint-disable-next-line no-console
     if (!IS_PROD) console.info('生成图形验证码: ', session.imageCaptcha);
-    return captcha.data;
+    return new ResponseData(captcha.data, {
+      responseType: 'assets'
+    });
   }
 
   @Post('captcha/sms')
