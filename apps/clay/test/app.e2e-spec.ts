@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { ClayModule } from './../src/clay.module';
+import { ClayModule } from '../src/clay.module';
 
 describe('ClayController (e2e)', () => {
   let app: INestApplication;

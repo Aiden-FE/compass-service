@@ -13,5 +13,7 @@ async function bootstrap() {
 }
 
 bootstrap()
+  // eslint-disable-next-line no-console
   .then(() => console.info('Compass service 启动成功.'))
+  // eslint-disable-next-line no-console
   .catch((err) => console.error(err));

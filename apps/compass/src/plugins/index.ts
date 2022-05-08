@@ -1,10 +1,10 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import injectSwaggerPlugin from './swagger.plugin';
 import * as compression from 'compression';
 import helmet from 'helmet';
-import { APP_ENV } from '../config';
 import { DbService } from '@libs/db';
 import { HttpExceptionFilter, ResponseInterceptor } from '@common';
+import { APP_ENV } from '../config';
+import injectSwaggerPlugin from './swagger.plugin';
 
 /**
  * @description 注入全局插件
@@ -20,7 +20,6 @@ export default async function injectGlobalPlugins(app: INestApplication) {
     new ValidationPipe({
       whitelist: true, // 非DTO属性自动移除
       transform: true, // 自动将类型转换为定义的类型
-      skipMissingProperties: true,
     }),
   );
   app.useGlobalInterceptors(new ResponseInterceptor());

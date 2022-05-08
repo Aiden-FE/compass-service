@@ -1,5 +1,4 @@
 import {
-  BadGatewayException,
   CallHandler,
   ExecutionContext,
   Injectable,
@@ -7,10 +6,8 @@ import {
 } from '@nestjs/common';
 import {catchError, Observable, throwError} from 'rxjs';
 import { map } from 'rxjs/operators';
-import {ErrorResponse, ResponseCode, ResponseException, SuccessResponse} from "@common";
+import {ResponseData, ResponseException} from "@common";
 import {Response} from "express";
-
-const DEFAULT_MESSAGE = 'operation succeeded';
 
 /**
  * @description 响应拦截器
@@ -19,34 +16,16 @@ const DEFAULT_MESSAGE = 'operation succeeded';
 export class ResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      map(resp => {
+      map(result => {
         const res = context.switchToHttp().getResponse<Response>()
-        let responseData: SuccessResponse | ErrorResponse;
-        if (resp instanceof ResponseException) {
-          return res
-            .status(resp.getStatus())
-            .json(resp.getResponse())
+        if (result instanceof ResponseException) {
+          res.status(result.getStatus())
+          return result.getResponse()
         }
-        if (Array.isArray(resp)) {
-          const [result, status, message, details] = resp;
-          responseData = {
-            result,
-            message: message || DEFAULT_MESSAGE,
-            status: status || ResponseCode.SUCCESS,
-            details
-          };
-        } else {
-          responseData = {
-            result: resp,
-            status: ResponseCode.SUCCESS,
-            message: DEFAULT_MESSAGE,
-          };
+        if (result instanceof ResponseData) {
+          return result.getResponse()
         }
-        if (res.get('Content-Type') && !res.get('Content-Type').includes('application/json')) {
-          res.send(responseData.result)
-        } else {
-          res.json(responseData)
-        }
+        return new ResponseData(result).getResponse()
       }),
       catchError((err) => {
         console.warn('catch error: ', err)

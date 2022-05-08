@@ -47,6 +47,12 @@
       ],
       "@libs/email/*": [
         "libs/email/src/*"
+      ],
+      "@libs/logger": [
+        "libs/logger/src"
+      ],
+      "@libs/logger/*": [
+        "libs/logger/src/*"
       ]
     }
   }

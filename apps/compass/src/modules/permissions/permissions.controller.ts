@@ -10,19 +10,22 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  PermissionCreateDto,
-  PermissionUpdateDto,
-} from './permissions.dto';
-import { PermissionsService } from './permissions.service';
-import { Authorization, AuthorizationGuard, PermissionsEnum, OwnerAppType } from '@common';
+  Authorization,
+  AuthorizationGuard,
+  PermissionsEnum,
+  OwnerAppType,
+} from '@common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { PermissionsService } from './permissions.service';
+import { PermissionCreateDto, PermissionUpdateDto } from './permissions.dto';
 
 @ApiTags('权限管理')
 @UseGuards(AuthGuard(), AuthorizationGuard)
 @Controller('permissions')
 export class PermissionsController {
   constructor(private permissionsService: PermissionsService) {}
+
   @ApiOperation({
     summary: '创建权限',
   })
@@ -73,6 +76,6 @@ export class PermissionsController {
   @Get()
   async getPermissionsInfo(@Headers('owner_app') owner: OwnerAppType) {
     const list = await this.permissionsService.getPermissionsInfo(owner);
-    return [list];
+    return list;
   }
 }

@@ -14,7 +14,7 @@ export function wrapPaginationQuery (pagination: PaginationDto) {
     result.take = Number(pagination.pageSize)
   }
   if (pagination.pageNum !== undefined) {
-    result.skip = pagination.pageNum * result.take
+    result.skip = Number(pagination.pageNum) * result.take
   }
   return result
 }

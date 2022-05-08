@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { HourglassModule } from './../src/hourglass.module';
+import { HourglassModule } from '../src/hourglass.module';
 
 describe('HourglassController (e2e)', () => {
   let app: INestApplication;

@@ -7,12 +7,6 @@ import {
   Response,
   Session,
 } from '@nestjs/common';
-import { OpenService } from './open.service';
-import {
-  CreateCaptchaDto,
-  SendEmailCaptchaDto,
-  SendSMSCaptchaDto,
-} from './open.dto';
 import { Response as ResponseType } from 'express';
 import {
   CAPTCHA_NUMBER_MAX_LIMIT,
@@ -25,6 +19,12 @@ import {
 import { AliCloudSMSService } from '@libs/sms';
 import { EmailService } from '@libs/email';
 import { random } from 'lodash';
+import {
+  CreateCaptchaDto,
+  SendEmailCaptchaDto,
+  SendSMSCaptchaDto,
+} from './open.dto';
+import { OpenService } from './open.service';
 
 @Controller('open')
 export class OpenController {
@@ -33,6 +33,7 @@ export class OpenController {
     private SMSService: AliCloudSMSService,
     private emailService: EmailService,
   ) {}
+
   @Get('captcha')
   captcha(
     @Query() query: CreateCaptchaDto,
@@ -42,7 +43,8 @@ export class OpenController {
     const captcha = this.openService.createCaptcha(query);
     session.imageCaptcha = captcha.text.toLocaleLowerCase();
     res.setHeader('Content-Type', 'image/svg+xml');
-    !IS_PROD && console.info('生成图形验证码: ', session.imageCaptcha);
+    // eslint-disable-next-line no-console
+    if (!IS_PROD) console.info('生成图形验证码: ', session.imageCaptcha);
     return captcha.data;
   }
 
@@ -53,6 +55,7 @@ export class OpenController {
   ) {
     let phone = body.telephone;
     if (phone.startsWith('+')) {
+      // eslint-disable-next-line prefer-destructuring
       phone = phone.split(' ')[1];
     }
     if (!session.imageCaptcha) {

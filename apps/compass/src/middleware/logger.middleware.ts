@@ -1,19 +1,19 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request } from 'express';
-import { APP_ENV } from '../config';
 import { format } from 'date-fns';
+import { APP_ENV } from '../config';
 
 @Injectable()
 export default class LoggerMiddleware implements NestMiddleware {
   use(
-    req: Request & { __startTime: Date | string | number },
+    req: Request & { startTime: Date | string | number },
     res: any,
     next: (error?: any) => void,
   ) {
     if (APP_ENV.isProd && req.method.toLocaleUpperCase() === 'GET') {
       next();
     } else {
-      req.__startTime = new Date();
+      req.startTime = new Date();
       const params =
         JSON.stringify(req.params) !== '{}'
           ? `\tParams: ${JSON.stringify(req.params)}`
@@ -29,8 +29,9 @@ export default class LoggerMiddleware implements NestMiddleware {
       const reqTime = Date.now();
       res.once('close', () => {
         // @ts-ignore
-        const time = new Date() - req.__startTime;
-        delete req.__startTime;
+        const time = new Date() - req.startTime;
+        delete req.startTime;
+        // eslint-disable-next-line no-console
         console.info(
           `[${format(
             reqTime,

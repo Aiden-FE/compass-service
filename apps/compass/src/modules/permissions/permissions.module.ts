@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PermissionsController } from './permissions.controller';
-import { PermissionsService } from './permissions.service';
 import { DbService } from '@libs/db';
 import { PassportModule } from '@nestjs/passport';
+import { PermissionsController } from './permissions.controller';
+import { PermissionsService } from './permissions.service';
 
 @Module({
   imports: [

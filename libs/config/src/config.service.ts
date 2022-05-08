@@ -15,6 +15,7 @@ export class ConfigService {
   constructor() {
     this.environmentData = this.validateEnv(this.getEnvironmentData());
   }
+
   /**
    * @description 获取指定key的config值
    *

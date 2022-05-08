@@ -11,13 +11,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  UserEmailRegisterDto,
-  UsersListQueryDto,
-  UsersLoginDto,
-  UserUpdateDto,
-  UserUpdatePrivacyDto,
-} from './users.dto';
-import {
   Authorization,
   AuthorizationGuard,
   PermissionsEnum,
@@ -25,12 +18,19 @@ import {
   ResponseException,
   SessionCompass,
 } from '@common';
-import { UsersService } from './users.service';
 import { useMd5EncodeContent } from '@compass-aiden/utils';
-import { APP_KEY_COMPASS } from '../../config';
 import { format } from 'date-fns';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
+import { APP_KEY_COMPASS } from '../../config';
+import { UsersService } from './users.service';
+import {
+  UserEmailRegisterDto,
+  UsersListQueryDto,
+  UsersLoginDto,
+  UserUpdateDto,
+  UserUpdatePrivacyDto,
+} from './users.dto';
 
 @Controller('users')
 export class UsersController {
@@ -38,6 +38,7 @@ export class UsersController {
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
+
   @Post('register/email')
   async emailRegister(
     @Body() body: UserEmailRegisterDto,
@@ -142,14 +143,12 @@ export class UsersController {
       body.smsCaptcha && body.smsCaptcha === Number(session.smsCaptcha);
     if (conditionEmail || conditionPhone) {
       const userInfo = await this.usersService.getUserInfoByParams(
-        Object.assign(
-          {
-            password: useMd5EncodeContent(body.password, APP_KEY_COMPASS),
-          },
-          conditionEmail
+        {
+          password: useMd5EncodeContent(body.password, APP_KEY_COMPASS),
+          ...(conditionEmail
             ? { email: body.email }
-            : { telephone: body.telephone },
-        ),
+            : { telephone: body.telephone }),
+        },
         true,
       );
       if (!userInfo) {
@@ -169,7 +168,7 @@ export class UsersController {
       const token = this.jwtService.sign(userInfo);
       return {
         ...userInfo,
-        token: 'Bearer ' + token,
+        token: `Bearer ${token}`,
       };
     }
     return new ResponseException({

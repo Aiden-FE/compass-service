@@ -6,7 +6,9 @@ import { AliCloudSMSConstructor, SendSMSParams } from '@libs/sms/sms.interface';
 @Injectable()
 export class AliCloudSMSService {
   private client: any;
+
   private DEFAULT_SIGN_NAME = 'Compass';
+
   constructor(opts: AliCloudSMSConstructor) {
     this.client = this.createClient(opts);
   }

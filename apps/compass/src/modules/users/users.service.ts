@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from '@libs/db';
+import { encodePhoneNumber, useMd5EncodeContent } from '@compass-aiden/utils';
+import { format } from 'date-fns';
+import { PaginationResponse, wrapPaginationQuery } from '@common';
+import { uniq } from 'lodash';
+import { APP_KEY_COMPASS } from '../../config';
 import {
   UserEmailRegisterDto,
   UserPhoneRegisterDto,
@@ -7,11 +12,6 @@ import {
   UserUpdatePrivacyDto,
   UserModel,
 } from './users.dto';
-import { encodePhoneNumber, useMd5EncodeContent } from '@compass-aiden/utils';
-import { APP_KEY_COMPASS } from '../../config';
-import { format } from 'date-fns';
-import { PaginationResponse, wrapPaginationQuery } from '@common';
-import { uniq } from 'lodash';
 
 @Injectable()
 export class UsersService {
@@ -24,9 +24,9 @@ export class UsersService {
   ) {
     return this.dbService.user.create({
       data: {
-        email: data['email'],
+        email: (data as UserEmailRegisterDto).email,
         password: useMd5EncodeContent(data.password, APP_KEY_COMPASS),
-        telephone: data['telephone'],
+        telephone: (data as UserPhoneRegisterDto).telephone,
         roles: {
           connect: data.roles?.map((id) => ({ id })),
         },
@@ -50,8 +50,8 @@ export class UsersService {
       where: { id },
       data: {
         ...data,
-        birthday: data.birthday !== undefined && new Date(data.birthday),
-        roles: data.roles && { set: data.roles.map((id) => ({ id })) },
+        birthday: data.birthday ? new Date(data.birthday) : undefined,
+        roles: data.roles && { set: data.roles.map((roleId) => ({ id: roleId })) },
       },
     });
   }
@@ -67,7 +67,10 @@ export class UsersService {
     });
   }
 
-  async getUserInfoByParams(params: Partial<UserModel>, joinPermissions = false) {
+  async getUserInfoByParams(
+    params: Partial<UserModel>,
+    joinPermissions = false,
+  ) {
     const userInfo = await this.dbService.user.findFirst({
       where: params,
       select: {
@@ -104,7 +107,7 @@ export class UsersService {
       (userInfo.roles.map((role) => {
         if (joinPermissions && role.permissions?.length) {
           (userInfo as any).permissions = (userInfo as any).permissions.concat(
-            role.permissions.map((role) => role.key),
+            role.permissions.map((permission) => permission.key),
           );
         }
         return role.id;
@@ -153,6 +156,7 @@ export class UsersService {
     return new PaginationResponse(
       users.map((user) => {
         if (user.telephone) {
+          // eslint-disable-next-line no-param-reassign
           user.telephone = encodePhoneNumber(user.telephone, {
             isCountry: true,
           });
@@ -177,6 +181,7 @@ export class UsersService {
         return (
           result?.map((user) => {
             if (user.birthday)
+              // eslint-disable-next-line no-param-reassign
               user.birthday = format(user.birthday, 'yyyy-MM-dd');
             return user;
           }) || result

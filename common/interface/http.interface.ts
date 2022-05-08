@@ -1,4 +1,4 @@
-import {IsNumber} from "class-validator";
+import {IsOptional, IsString} from "class-validator";
 import {PermissionsEnum} from "@common/config";
 
 interface AbstractResponse {
@@ -30,10 +30,13 @@ export enum ResponseCode {
 }
 
 export class PaginationDto {
-  @IsNumber()
-  pageNum?: number
-  @IsNumber()
-  pageSize?: number
+  @IsOptional()
+  @IsString()
+  pageNum?: string
+  
+  @IsOptional()
+  @IsString()
+  pageSize?: string
 }
 
 export interface SessionCompass {
@@ -45,4 +48,42 @@ export interface SessionCompass {
 export interface AuthorizationOptions {
   mode: 'OR' | 'AND'
   permissions: PermissionsEnum[]
+}
+
+export interface ResponseDataOptions {
+  status?: ResponseCode
+  message?: string
+  details?: string
+  responseType?: 'json' | 'assets'
+}
+
+export class ResponseData<T = unknown> {
+  private options: ResponseDataOptions
+  constructor(
+    private result: T,
+    options?: ResponseDataOptions
+  ) {
+    this.options = Object.assign({
+      status: ResponseCode.SUCCESS,
+      message: 'Operation succeeded',
+      responseType: typeof result === 'object' && !Array.isArray(result) ? 'json' : 'unknown'
+    }, options)
+  }
+  
+  isJSON () {
+    return this.options.responseType === 'json'
+  }
+  
+  getStatus () {
+    return this.options.status
+  }
+  
+  getResponse () {
+    return this.isJSON() ? {
+      result: this.result,
+      status: this.getStatus(),
+      message: this.options.message,
+      details: this.options.details,
+    } : this.result
+  }
 }
