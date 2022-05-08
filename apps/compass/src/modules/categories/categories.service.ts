@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {CategoriesCreateDto, CategoriesQueryDto, CategoriesUpdateDto} from "./categories.dto";
 import {DbService} from "@libs/db";
-import type {Category} from '@prisma/client'
 import {PaginationResponse, ResponseException, wrapPaginationQuery} from "@common";
 
 @Injectable()
@@ -75,7 +74,7 @@ export class CategoriesService {
     })
   }
   
-  private async getDirectory (data: Partial<CategoriesCreateDto>, categoryOrigin?: Category) {
+  private async getDirectory (data: Partial<CategoriesCreateDto>, categoryOrigin?: any) {
     if (data.parentId && data.parentId !== -1) {
       const category = categoryOrigin || await this.dbService.category.findFirst({
         where: {id: data.parentId}
