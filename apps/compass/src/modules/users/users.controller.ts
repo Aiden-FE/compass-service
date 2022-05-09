@@ -58,7 +58,7 @@ export class UsersController {
     }
     await this.usersService.createUser({
       email: body.email,
-      password: body.email,
+      password: body.password,
       roles: body.roles,
     });
     return true;
