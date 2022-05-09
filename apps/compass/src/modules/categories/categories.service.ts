@@ -45,7 +45,7 @@ export class CategoriesService {
   }
   
   async updateCategory (id: number, data: CategoriesUpdateDto, user: UserModel) {
-    return this.dbService.category.updateMany({
+    const result = await this.dbService.category.updateMany({
       where: {id, userId: user.id},
       data: {
         ...data,
@@ -54,6 +54,11 @@ export class CategoriesService {
           : undefined
       }
     })
+    if (result.count > 0) {
+      return true
+    } else {
+      return new ResponseException('不存在待更新的数据')
+    }
   }
   
   deleteCategory (id: number, user: UserModel) {

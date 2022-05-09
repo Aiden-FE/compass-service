@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import {DbService} from "@libs/db";
 import {BookmarksCreateDto, BookmarksQueryDto, BookmarkUpdateDto} from "./bookmarks.dto";
-import {PaginationResponse, wrapPaginationQuery} from "@common";
+import {PaginationResponse, ResponseException, wrapPaginationQuery} from "@common";
+import {UserModel} from "../users/users.dto";
 
 @Injectable()
 export class BookmarksService {
   constructor(private dbService: DbService) {}
-  async findBookmarks (data: BookmarksQueryDto) {
+  async findBookmarks (data: BookmarksQueryDto, user: UserModel) {
     const [total, bookmarks] = await this.dbService.$transaction([
       this.dbService.bookmark.count({
         where: {
+          userId: user.id,
           name: {
             contains: data.keyword
           }
@@ -18,6 +20,7 @@ export class BookmarksService {
       this.dbService.bookmark.findMany({
         ...wrapPaginationQuery(data),
         where: {
+          userId: user.id,
           name: {
             contains: data.keyword
           }
@@ -32,16 +35,16 @@ export class BookmarksService {
     return new PaginationResponse(bookmarks, data, total)
   }
   
-  findBookmark (id: number) {
+  findBookmark (id: number, user: UserModel) {
     return this.dbService.bookmark.findFirst({
-      where: {id},
+      where: {id, userId: user.id},
       include: {
         categories: true
       }
     })
   }
   
-  async updateBookmark (id: number, data: BookmarkUpdateDto) {
+  async updateBookmark (id: number, data: BookmarkUpdateDto, user: UserModel) {
     let heat: number
     if (data.increaseHeat) {
       const bookmark = await this.dbService.bookmark.findFirst({where: {id}})
@@ -50,23 +53,31 @@ export class BookmarksService {
       }
       delete data.increaseHeat
     }
-    return this.dbService.bookmark.update({
-      where: {id},
+    const result = await this.dbService.bookmark.updateMany({
+      where: {id, userId: user.id},
       data: {
         ...data,
         heat
       }
     })
+    if (result.count > 0) {
+      return true
+    } else {
+      return new ResponseException('不存在待更新的数据')
+    }
   }
   
-  deleteBookmark (id: number) {
-    return this.dbService.bookmark.delete({where: {id}})
+  deleteBookmark (id: number, user: UserModel) {
+    return this.dbService.bookmark.deleteMany({
+      where: {id, userId: user.id}
+    })
   }
   
-  createBookmark (data: BookmarksCreateDto) {
+  createBookmark (data: BookmarksCreateDto, user: UserModel) {
     return this.dbService.bookmark.create({
       data: {
         ...data,
+        userId: user.id,
         categories: {
           connect: data.categories?.map(id => ({id}))
         }
