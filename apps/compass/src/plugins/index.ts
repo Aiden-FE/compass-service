@@ -22,8 +22,8 @@ export default async function injectGlobalPlugins(app: INestApplication) {
       transform: true, // 自动将类型转换为定义的类型
     }),
   );
-  app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalInterceptors(new ResponseInterceptor());
   const dbService = app.get(DbService);
   await dbService.enableShutdownHooks(app);
 }

@@ -25,7 +25,12 @@ export class ResponseInterceptor implements NestInterceptor {
         const data = result instanceof ResponseData
           ? result
           : new ResponseData(result)
-        res.send(data.getResponse())
+        res.status(data.getHttpStatus())
+        if (data.getResponseType() === 'json') {
+          return data.getResponse()
+        } else {
+          return res.send(data.getResponse())
+        }
       }),
       catchError((err) => {
         console.warn('catch error: ', err)

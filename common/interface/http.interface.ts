@@ -1,5 +1,6 @@
 import {IsOptional, IsString} from "class-validator";
 import {PermissionsEnum} from "@common/config";
+import {HttpStatus} from "@nestjs/common";
 
 interface AbstractResponse {
   status: ResponseCode
@@ -51,7 +52,10 @@ export interface AuthorizationOptions {
 }
 
 export interface ResponseDataOptions {
+  /** 业务状态 */
   status?: ResponseCode
+  /** 请求状态 */
+  httpStatus?: HttpStatus
   message?: string
   details?: string
   responseType?: 'json' | 'assets'
@@ -65,6 +69,7 @@ export class ResponseData<T = unknown> {
   ) {
     this.options = Object.assign({
       status: ResponseCode.SUCCESS,
+      httpStatus: HttpStatus.OK,
       message: 'Operation succeeded',
       responseType: 'json'
     }, options)
@@ -76,6 +81,10 @@ export class ResponseData<T = unknown> {
   
   getStatus () {
     return this.options.status
+  }
+  
+  getHttpStatus () {
+    return this.options.httpStatus
   }
   
   getResponse () {
