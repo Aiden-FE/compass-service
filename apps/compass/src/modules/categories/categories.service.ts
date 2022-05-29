@@ -61,8 +61,8 @@ export class CategoriesService {
     }
   }
   
-  deleteCategory (id: number, user: UserModel) {
-    const children = this.dbService.category.findFirst({
+  async deleteCategory (id: number, user: UserModel) {
+    const children = await this.dbService.category.findFirst({
       where: {
         parentId: id,
         userId: user.id
