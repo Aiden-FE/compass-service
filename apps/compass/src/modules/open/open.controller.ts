@@ -107,7 +107,7 @@ export class OpenController {
       to: body.email,
       subject: '[指南针] 邮箱注册码',
       html: `
-        <p>您正在注册[指南针]邮箱账号,验证码为 <strong>${session.emailCaptcha}</strong> ,五分钟内有效.</p>
+        <p>您正在登录或注册[指南针]邮箱账号,验证码为 <strong>${session.emailCaptcha}</strong> ,五分钟内有效.</p>
         <p>如非您本人注册请勿将验证码透露给他人并忽略此邮件.</p>
       `,
     });

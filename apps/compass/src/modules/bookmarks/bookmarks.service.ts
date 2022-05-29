@@ -32,7 +32,11 @@ export class BookmarksService {
       })
     ])
     
-    return new PaginationResponse(bookmarks, data, total)
+    return new PaginationResponse(bookmarks.map(bookmark => {
+      // @ts-ignore
+      bookmark.categories = bookmark.categories.map(category => category.id)
+      return bookmark
+    }), data, total)
   }
   
   findBookmark (id: number, user: UserModel) {
@@ -53,18 +57,20 @@ export class BookmarksService {
       }
       delete data.increaseHeat
     }
-    const result = await this.dbService.bookmark.updateMany({
-      where: {id, userId: user.id},
+    const additionalData: any = {}
+    if (data.categories) {
+      additionalData.categories = {
+        set: data.categories.map(id => ({id}))
+      }
+    }
+    return this.dbService.bookmark.update({
+      where: {id},
       data: {
         ...data,
-        heat
-      }
+        heat,
+        ...additionalData
+      },
     })
-    if (result.count > 0) {
-      return true
-    } else {
-      return new ResponseException('不存在待更新的数据')
-    }
   }
   
   deleteBookmark (id: number, user: UserModel) {
