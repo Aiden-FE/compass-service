@@ -30,4 +30,4 @@ export const DEFAULT_PAGE_NUM = 0
 export const DEFAULT_PAGE_SIZE = 9999
 
 export const COOKIE_TIMEOUT = 1000 * 60 * 5
-export const LOGIN_TIMEOUT = '72h'
+export const LOGIN_TIMEOUT = '30d'
