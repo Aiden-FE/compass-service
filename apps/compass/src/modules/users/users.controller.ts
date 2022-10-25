@@ -18,7 +18,7 @@ import {
   ResponseException,
   SessionCompass,
 } from '@common';
-const { useMd5EncodeContent } = require('@compass-aiden/utils/lib/cjs/main.cjs')
+import { useMd5EncodeContent } from '@compass-aiden/utils'
 import { format } from 'date-fns';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';

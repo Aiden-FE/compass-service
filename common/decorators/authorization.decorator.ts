@@ -1,7 +1,6 @@
 import { SetMetadata } from '@nestjs/common';
 import {AuthorizationOptions, PermissionsEnum} from "@common";
-const {toArray} = require("@compass-aiden/utils/lib/cjs/main.cjs");
-
+import { toArray } from '@compass-aiden/utils'
 /**
  * @description 设置许可权限
  * @param permissions 权限key或keys
