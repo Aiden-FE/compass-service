@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from '@libs/db';
-import { encodePhoneNumber, useMd5EncodeContent } from '@compass-aiden/utils'
+const { encodePhoneNumber, useMd5EncodeContent } = require('@compass-aiden/utils/dist/main.cjs')
 import { format } from 'date-fns';
 import { PaginationResponse, wrapPaginationQuery } from '@common';
 import { uniq } from 'lodash';
