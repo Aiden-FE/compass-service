@@ -1,5 +1,17 @@
 # Compass Service
 
+**请注意,本仓库正在升级2.0, 前往这个[sprint/next](https://github.com/Aiden-FE/compass-service/tree/sprint/next)以跟踪最新变更**
+
+2.0会带来哪些变更?
+
+* 全新的项目结构
+* 更严苛的进出口数据约束
+* 更清晰的异常机制
+* 最新版的 Nestjs/Prisma 的集成
+* 更易懂的文档引导
+* 基于Git Actions的流水线
+* 接口信息的国际化处理
+
 ## Development Feature
 
 - [x] [Typescript](https://www.tslang.cn/index.html)
