@@ -1,93 +1,22 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/compass/src",
-  "monorepo": true,
-  "root": "apps/compass",
+  "sourceRoot": "apps/compass-service/src",
   "compilerOptions": {
+    "deleteOutDir": true,
     "webpack": true,
-    "tsConfigPath": "apps/compass/tsconfig.app.json"
+    "tsConfigPath": "apps/compass-service/tsconfig.app.json"
   },
+  "monorepo": true,
+  "root": "apps/compass-service",
   "projects": {
-    "compass": {
+    "compass-service": {
       "type": "application",
-      "root": "apps/compass",
+      "root": "apps/compass-service",
       "entryFile": "main",
-      "sourceRoot": "apps/compass/src",
+      "sourceRoot": "apps/compass-service/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/compass/tsconfig.app.json"
-      }
-    },
-    "hourglass": {
-      "type": "application",
-      "root": "apps/hourglass",
-      "entryFile": "main",
-      "sourceRoot": "apps/hourglass/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/hourglass/tsconfig.app.json"
-      }
-    },
-    "clay": {
-      "type": "application",
-      "root": "apps/clay",
-      "entryFile": "main",
-      "sourceRoot": "apps/clay/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/clay/tsconfig.app.json"
-      }
-    },
-    "bookmark": {
-      "type": "application",
-      "root": "apps/bookmark",
-      "entryFile": "main",
-      "sourceRoot": "apps/bookmark/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/bookmark/tsconfig.app.json"
-      }
-    },
-    "config": {
-      "type": "library",
-      "root": "libs/config",
-      "entryFile": "index",
-      "sourceRoot": "libs/config/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/config/tsconfig.lib.json"
-      }
-    },
-    "db": {
-      "type": "library",
-      "root": "libs/db",
-      "entryFile": "index",
-      "sourceRoot": "libs/db/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/db/tsconfig.lib.json"
-      }
-    },
-    "sms": {
-      "type": "library",
-      "root": "libs/sms",
-      "entryFile": "index",
-      "sourceRoot": "libs/sms/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/sms/tsconfig.lib.json"
-      }
-    },
-    "email": {
-      "type": "library",
-      "root": "libs/email",
-      "entryFile": "index",
-      "sourceRoot": "libs/email/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/email/tsconfig.lib.json"
-      }
-    },
-    "logger": {
-      "type": "library",
-      "root": "libs/logger",
-      "entryFile": "index",
-      "sourceRoot": "libs/logger/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/logger/tsconfig.lib.json"
+        "tsConfigPath": "apps/compass-service/tsconfig.app.json"
       }
     }
   }

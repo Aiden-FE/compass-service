@@ -34,7 +34,4 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-/deploy/db
-/deploy/redis-data
-.env
-/libs/db/src/docs
+pnpm-lock.yaml
