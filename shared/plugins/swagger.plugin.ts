@@ -11,7 +11,7 @@ export default function provideSwaggerPlugin(
     path?: string;
   },
 ) {
-  const docsPath = option.path || `/docs/${(option.version || version).replace(/\./g, '-')}`;
+  const docsPath = option.path || '/docs';
   const apiDocOptions = new DocumentBuilder()
     .setTitle(option.title)
     .setDescription(option.description)
