@@ -6,6 +6,8 @@ export default async function providePlugins(app: INestApplication) {
   app.enableVersioning({
     type: VersioningType.URI,
   });
+  // cors 保护
+  app.enableCors();
   // swagger文档支持
   provideSwaggerPlugin(app, {
     title: 'Compass service',

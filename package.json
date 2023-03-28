@@ -24,7 +24,9 @@
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.2.1",
+    "@nestjs/throttler": "^4.0.0",
     "dotenv": "^16.0.3",
+    "helmet": "^6.0.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
   },

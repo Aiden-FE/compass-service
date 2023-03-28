@@ -1,4 +1,5 @@
 import '../plugins/dotenv.plugin';
+import { ENV_KEYS } from '@shared/config';
 
 let defaultEnvValues: Record<string, string> = {};
 
@@ -10,7 +11,7 @@ export function setDefaultEnvValues(values: Record<string, string>) {
   };
 }
 
-export function getEnv(key: string, defaultValue: string = ''): string {
+export function getEnv(key: ENV_KEYS, defaultValue: string = ''): string {
   let val = process.env[key];
   if (val !== undefined) return val;
   val = defaultValue[key];
