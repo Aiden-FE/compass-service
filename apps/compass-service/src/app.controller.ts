@@ -1,5 +1,6 @@
-import { Controller, Get, Version } from '@nestjs/common';
+import { Controller, Get, Query, Version } from '@nestjs/common';
 import { AppService } from './app.service';
+import { AppQueryDto } from './app.dto';
 
 @Controller()
 export class AppController {
@@ -12,7 +13,8 @@ export class AppController {
 
   @Version('2')
   @Get()
-  getHelloV2(): string {
-    return `${this.appService.getHello()} v2`;
+  getHelloV2(@Query() query: AppQueryDto) {
+    console.log('Query: ', query);
+    return this.appService.getHello();
   }
 }
