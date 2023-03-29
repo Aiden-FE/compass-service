@@ -1,7 +1,7 @@
 import { Controller, Get, Query, Version } from '@nestjs/common';
+import { HttpResponse } from '@shared';
 import { AppService } from './app.service';
 import { AppQueryDto } from './app.dto';
-import { HttpResponse } from '@shared';
 
 @Controller()
 export class AppController {
