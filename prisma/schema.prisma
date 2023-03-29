@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("MYSQL_DATABASE_URL")
+}
+
+model Permission {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique @db.VarChar(128)
+  name        String   @db.VarChar(24)
+  description String?  @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  roles       Role[]
+
+  @@index([key])
+  @@map("permissions")
+}
+
+model Role {
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(24)
+  description String?      @db.VarChar(255)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  permissions Permission[]
+  users       User[]
+
+  @@map("roles")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  password      String    @db.VarChar(64) // 登录密码
+  telephone     String?   @unique @db.VarChar(64) // 手机号码
+  email         String?   @unique @db.VarChar(255)
+  name          String?   @db.VarChar(255) // 真实姓名
+  nickname      String?   @db.VarChar(24) // 昵称
+  gender        Gender?   @default(UNKOWN)
+  birthday      DateTime?
+  enabled       Boolean?  @default(true) // 账号启用状态
+  lastLoginTime DateTime? @map("last_login_time")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  roles         Role[]
+
+  @@index([telephone, email])
+  @@map("users")
+}
+
+enum Gender {
+  WOMEN
+  MEN
+  UNKOWN
+}

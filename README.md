@@ -22,9 +22,12 @@
 * 接口限流保护,默认一个IP一个端点每分钟仅允许调用10次,特例场景可以通过装饰器跳过限流或局部修改限流
 * 默认启用 express json,urlencoded 中间件
 * 约束接口进参,移除非白名单属性,自动转换数据为符合预期的类型
+* Prisma ORM 支持
+* 统一的响应拦截器,规范返回数据
 
 ### 2.0 移除的特性
 
 * compression 移除,压缩支持应该在nginx层处理,而不在服务器
 * csurf 已废弃,不再采用
 * LoggerMiddleware 已移除,改为采用 @nestjs/common 内置的 Logger
+* 扩展的HttpException已被移除,改为采用 @nestjs/common 内置的 HttpException
