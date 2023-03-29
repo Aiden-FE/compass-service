@@ -1,5 +1,5 @@
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
-import { provideSwaggerPlugin } from '@shared';
+import { provideSwaggerPlugin, ResponseInterceptor } from '@shared';
 
 export default async function providePlugins(app: INestApplication) {
   // 接口多版本
@@ -15,6 +15,7 @@ export default async function providePlugins(app: INestApplication) {
     description: 'A Nestjs backend service.',
   });
   app.useGlobalPipes(
+    // 入参数据验证
     new ValidationPipe({
       transform: true, // 转换数据
       whitelist: true, // 剥离装饰器不验证的项目
@@ -23,4 +24,5 @@ export default async function providePlugins(app: INestApplication) {
       // disableErrorMessages: true, // 禁用详细错误信息
     }),
   );
+  app.useGlobalInterceptors(new ResponseInterceptor());
 }
