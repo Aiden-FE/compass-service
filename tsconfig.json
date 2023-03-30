@@ -30,6 +30,12 @@
       ],
       "@app/db/*": [
         "libs/db/src/*"
+      ],
+      "@app/email": [
+        "libs/email/src"
+      ],
+      "@app/email/*": [
+        "libs/email/src/*"
       ]
     }
   }
