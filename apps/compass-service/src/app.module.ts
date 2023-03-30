@@ -3,9 +3,11 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { CompassEnv, getEnv } from '@shared';
 import { DBModule } from '@app/db';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { JwtAuthGuard } from '@shared/guards';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { OauthModule } from './oauth/oauth.module';
+import allModules from './modules';
 
 const importModules = [];
 
@@ -38,9 +40,15 @@ if (redisHost && redisPort && redisPassword) {
       ttl: Number(getEnv(CompassEnv.THROTTLER_TTL, '60')),
       limit: Number(getEnv(CompassEnv.THROTTLER_LIMIT, '10')),
     }),
-    OauthModule,
+    ...allModules,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

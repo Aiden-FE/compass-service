@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { createTransport } from 'nodemailer';
 import { EmailMailOption, EmailTransporter, EmailTransportParams } from './email.dto';
 
@@ -8,6 +8,7 @@ export class EmailService {
 
   constructor(private option: EmailTransportParams[0], defaultOption?: EmailTransportParams[1]) {
     this.transporter = this.createTransporter(option, defaultOption);
+    Logger.log('Mail service is ready', 'MailService');
   }
 
   public sendMail(option: EmailMailOption) {

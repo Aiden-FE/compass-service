@@ -2,6 +2,7 @@ import { DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE } from '@shared/config';
 import { PaginationRequestFromURLDto } from '@shared/interfaces';
 
 export * from './env';
+export { default as JwtStrategy } from './jwt.strategy';
 
 /**
  * @description 包装分页查询参数,确保查询参数正确

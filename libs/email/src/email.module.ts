@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { EmailService } from './email.service';
-import { EmailTransportParams } from './email.dto';
 
 @Module({
   providers: [EmailService],
   exports: [EmailService],
 })
 export class EmailModule {
-  static forRoot(option: EmailTransportParams[0], defaultOption?: EmailTransportParams[1]) {
+  // https://nodemailer.com/usage/ 详见
+  static forRoot(option: any, defaultOption?: any) {
     return {
       module: EmailModule,
       providers: [

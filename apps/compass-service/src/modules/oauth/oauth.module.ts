@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { EmailModule } from '@app/email';
 import { CompassEnv, getEnv } from '@shared';
+import { DBService } from '@app/db';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import JwtStrategy from '@shared/utils/jwt.strategy';
 import { OauthController } from './oauth.controller';
 import { OauthService } from './oauth.service';
 
@@ -22,8 +26,18 @@ if (emailUser && emailPassword) {
 }
 
 @Module({
-  imports: [...importModules],
+  imports: [
+    ...importModules,
+    PassportModule.register({
+      defaultStrategy: 'jwt',
+    }),
+    JwtModule.register({
+      global: true,
+      secret: getEnv(CompassEnv.JWT_SECRET),
+      signOptions: { expiresIn: getEnv(CompassEnv.JWT_EXPIRES, '14d') },
+    }),
+  ],
   controllers: [OauthController],
-  providers: [OauthService],
+  providers: [OauthService, DBService, JwtStrategy],
 })
 export class OauthModule {}
