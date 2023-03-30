@@ -24,6 +24,7 @@
 * 约束接口进参,移除非白名单属性,自动转换数据为符合预期的类型
 * Prisma ORM 支持
 * 统一的响应拦截器,规范返回数据
+* EMail邮件服务支持
 
 ### 2.0 移除的特性
 
@@ -31,3 +32,4 @@
 * csurf 已废弃,不再采用
 * LoggerMiddleware 已移除,改为采用 @nestjs/common 内置的 Logger
 * 扩展的HttpException已被移除,改为采用 @nestjs/common 内置的 HttpException
+* SessionModule已被移除,这个模块并不适合在生产环境使用

@@ -15,8 +15,7 @@ export class AppController {
   @Version('2')
   @Get()
   getHelloV2(@Query() query: AppQueryDto) {
-    console.log('Query: ', query);
-    return this.appService.getHello();
+    return this.appService.getHello() + JSON.stringify(query);
   }
 
   @Version('3')
