@@ -1,5 +1,5 @@
 import '../plugins/dotenv.plugin';
-import { COMPASS_ENV } from '@shared/config';
+import { CompassEnv } from '@shared/config';
 
 let defaultEnvValues: Record<string, string> = {};
 
@@ -11,7 +11,7 @@ export function setDefaultEnvValues(values: Record<string, string>) {
   };
 }
 
-export function getEnv(key: COMPASS_ENV, defaultValue: string = ''): string {
+export function getEnv(key: CompassEnv, defaultValue: string = ''): string {
   let val = process.env[key];
   if (val !== undefined) return val;
   val = defaultValue[key];
