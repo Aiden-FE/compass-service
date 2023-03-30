@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { EmailModule } from '@app/email';
-import { COMPASS_ENV, getEnv } from '@shared';
+import { CompassEnv, getEnv } from '@shared';
 import { OauthController } from './oauth.controller';
 import { OauthService } from './oauth.service';
 
 const importModules = [];
-const emailUser = getEnv(COMPASS_ENV.EMAIL_USER);
-const emailPassword = getEnv(COMPASS_ENV.EMAIL_PASSWORD);
+const emailUser = getEnv(CompassEnv.EMAIL_USER);
+const emailPassword = getEnv(CompassEnv.EMAIL_PASSWORD);
 
 if (emailUser && emailPassword) {
   importModules.push(

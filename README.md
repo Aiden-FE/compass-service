@@ -15,6 +15,7 @@
 ## 特性
 
 * Monorepo 结构,易于扩展服务及公共资源沉淀
+* Typescript/Jest/Airbnb Eslint/Prettier
 * 支持.env文件控制环境变量,示例可见: .env.example,复制示例文件进入.env文件后按需配置即可
 * 支持Swagger文档
 * helmet 安全的响应头设置
@@ -25,6 +26,7 @@
 * Prisma ORM 支持
 * 统一的响应拦截器,规范返回数据
 * EMail邮件服务支持
+* 支持连接redis服务
 
 ### 2.0 移除的特性
 
