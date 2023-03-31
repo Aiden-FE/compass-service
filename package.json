@@ -91,11 +91,13 @@
     "testEnvironment": "node",
     "roots": [
       "<rootDir>/apps/",
-      "<rootDir>/libs/"
+      "<rootDir>/libs/",
+      "<rootDir>/shared/"
     ],
     "moduleNameMapper": {
       "^@app/db(|/.*)$": "<rootDir>/libs/db/src/$1",
-      "^@app/email(|/.*)$": "<rootDir>/libs/email/src/$1"
+      "^@app/email(|/.*)$": "<rootDir>/libs/email/src/$1",
+      "^@shared(|/.*)$": "<rootDir>/shared/$1"
     }
   }
 }

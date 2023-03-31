@@ -8,7 +8,7 @@ jobs:
   test:
     docker:
       - image: node:18.15.0-slim
-    working_directory: ~/compass-service
+    working_directory: ~/compass
     steps:
       - checkout
       - restore_cache:
@@ -17,10 +17,11 @@ jobs:
               - v1-dependencies-
       - run:
             command: |
-              npm config set registry https://registry.npmmirror.com/
-              npm install
-              npm run lint
-              npm run test
+              npm install -g pnpm
+              pnpm config set registry https://registry.npmmirror.com/
+              pnpm install
+              pnpm run lint
+              pnpm run test
       - save_cache:
           paths:
             - node_modules
@@ -32,7 +33,7 @@ jobs:
       - image: node:18.15.0-slim
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    working_directory: ~/compass-service
+    working_directory: ~/compass
     steps:
       - checkout
       - restore_cache:
@@ -43,15 +44,11 @@ jobs:
           command: |
             apt-get update
             apt-get -q -y install openssl
-            npm config set registry https://registry.npmmirror.com/
-            npm install
-            npm run build
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            pnpm config set registry https://registry.npmmirror.com/
+            pnpm install
+            pnpm run build
       - persist_to_workspace:
-          root: ~/compass-service
+          root: ~/compass
           paths:
             - dist
             - libs

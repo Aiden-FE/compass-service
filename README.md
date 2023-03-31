@@ -30,6 +30,7 @@
 * EMail邮件服务支持
 * 支持连接redis服务
 * 支持JWT校验 + 用户权限集验证
+* 集成circleci pipeline
 
 ### 2.0 移除的特性
 
