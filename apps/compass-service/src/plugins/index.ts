@@ -20,6 +20,7 @@ export default async function providePlugins(app: INestApplication) {
     new ValidationPipe(validationOption),
   );
   app.useGlobalInterceptors(new ResponseInterceptor());
+
   // 断开连接前需要关闭db连接
   const dbService = app.get(DBService);
   await dbService.enableShutdownHooks(app);

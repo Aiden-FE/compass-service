@@ -11,14 +11,9 @@ import allModules from './modules';
 
 const importModules = [];
 
-const sqlURL = getEnv(CompassEnv.MYSQL_DATABASE_URL);
 const redisHost = getEnv(CompassEnv.REDIS_HOST);
 const redisPort = getEnv(CompassEnv.REDIS_PORT);
 const redisPassword = getEnv(CompassEnv.REDIS_PASSWORD);
-
-if (sqlURL) {
-  importModules.push(DBModule);
-}
 
 if (redisHost && redisPort && redisPassword) {
   importModules.push(
@@ -42,6 +37,7 @@ if (redisHost && redisPort && redisPassword) {
       // 单位时间内限制的次数
       limit: Number(getEnv(CompassEnv.THROTTLER_LIMIT)),
     }),
+    DBModule,
     ...allModules,
   ],
   controllers: [AppController],
