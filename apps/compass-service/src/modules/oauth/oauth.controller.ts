@@ -18,6 +18,7 @@ export class OauthController {
     return { ...userInfo, token: signStr };
   }
 
+  // eslint-disable-next-line class-methods-use-this
   @Permissions(PERMISSIONS.COMMON_USER_QUERY)
   @Get('test')
   async test(@User() user: any) {

@@ -13,5 +13,7 @@ module.exports = {
     jest: true,
   },
   ignorePatterns: ['.eslintrc.js'],
-  rules: {},
+  rules: {
+    'max-classes-per-file': 'off', // dto内会声明多个dto class
+  },
 };
