@@ -5,7 +5,7 @@ import { AppModule } from './app.module';
 import providePlugins from './plugins';
 import provideMiddleware from './middleware';
 
-const LISTEN_PORT = Number(getEnv(CompassEnv.LISTEN_PORT, '8080'));
+const LISTEN_PORT = Number(getEnv(CompassEnv.LISTEN_PORT));
 Logger.overrideLogger(getEnv(CompassEnv.NODE_ENV) === 'development' ? ['log'] : ['warn']);
 
 async function bootstrap() {

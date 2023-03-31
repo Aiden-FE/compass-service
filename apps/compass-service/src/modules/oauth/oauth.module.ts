@@ -34,7 +34,7 @@ if (emailUser && emailPassword) {
     JwtModule.register({
       global: true,
       secret: getEnv(CompassEnv.JWT_SECRET),
-      signOptions: { expiresIn: getEnv(CompassEnv.JWT_EXPIRES, '14d') },
+      signOptions: { expiresIn: getEnv(CompassEnv.JWT_EXPIRES) },
     }),
   ],
   controllers: [OauthController],
