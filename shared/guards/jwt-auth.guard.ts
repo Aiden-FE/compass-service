@@ -45,7 +45,11 @@ export default class JwtAuthGuard extends AuthGuard('jwt') {
     // 如果未使用 @Permissions() 装饰器的接口意味着不需要具体权限码授权
     if (!permissionsOption || !permissionsOption.permissions?.length) return true;
     const { user } = context.switchToHttp().getRequest();
-    // FIXME: 这里的user.permissions应该是通过user.roles前往数据库(先查redis内角色的权限缓存通常是个好的选择)聚合权限集并去重得出的
+    /**
+     * FIXME: 这里的user.permissions应该是通过user.roles前往数据库(先查redis内角色的权限缓存通常是个好的选择)聚合权限集并去重得出的
+     * 原因在于产线的权限集通常会膨胀的很大,不适合混合在jwt内.
+     * user.permissions = await this.getUserPermissions(user.roles);
+     */
     // 没有权限则直接拒绝访问
     if (!user || !user.permissions?.length) return false;
     // 或权限处理
@@ -58,4 +62,13 @@ export default class JwtAuthGuard extends AuthGuard('jwt') {
       return user.permissions.includes(key);
     }, true);
   }
+
+  /**
+   * @description 根据用户具备的角色去聚合所有权限
+   * @todo: 这个方法也可以由UserService提供,jwtAuth注入UserService后调用
+   * @param roles
+   * @private
+   */
+  // private getUserPermissions(roles: number[]) {
+  // }
 }
