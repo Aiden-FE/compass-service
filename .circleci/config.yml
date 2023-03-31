@@ -17,7 +17,6 @@ jobs:
               - v1-dependencies-
       - run:
             command: |
-#              npm install -g pnpm
               npm config set registry https://registry.npmmirror.com/
               npm install
               npm run lint
