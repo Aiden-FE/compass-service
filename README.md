@@ -37,6 +37,6 @@
 
 * compression 移除,压缩支持应该在nginx层处理,而不在服务器
 * csurf 已废弃,不再采用
-* LoggerMiddleware 已移除,改为采用 @nestjs/common 内置的 Logger
+* LoggerService 已移除,改为采用 @nestjs/common 内置的 Logger
 * 扩展的HttpException已被移除,改为采用 @nestjs/common 内置的 HttpException
 * SessionModule已被移除,这个模块并不适合在生产环境使用
