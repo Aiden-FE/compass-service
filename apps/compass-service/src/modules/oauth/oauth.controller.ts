@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PERMISSIONS, Permissions, Public, User, validateMultipleDto } from '@shared';
+import { Public, User, validateMultipleDto } from '@shared';
 import { EMailLoginDto, TelephoneLoginDto } from './oauth.dto';
 
 @Controller('oauth')
