@@ -1,5 +1,5 @@
 import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
-import { provideSwaggerPlugin, ResponseInterceptor } from '@shared';
+import { provideSwaggerPlugin, ResponseInterceptor, validationOption } from '@shared';
 import { DBService } from '@app/db';
 
 export default async function providePlugins(app: INestApplication) {
@@ -17,13 +17,7 @@ export default async function providePlugins(app: INestApplication) {
   });
   app.useGlobalPipes(
     // 入参数据验证
-    new ValidationPipe({
-      transform: true, // 转换数据
-      whitelist: true, // 剥离装饰器不验证的项目
-      stopAtFirstError: true, // 遇见第一个错误时就停止验证
-      // skipMissingProperties: true, // 跳过未定义或定义null的验证
-      // disableErrorMessages: true, // 禁用详细错误信息
-    }),
+    new ValidationPipe(validationOption),
   );
   app.useGlobalInterceptors(new ResponseInterceptor());
   // 断开连接前需要关闭db连接

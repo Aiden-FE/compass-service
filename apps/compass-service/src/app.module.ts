@@ -37,8 +37,10 @@ if (redisHost && redisPort && redisPassword) {
   imports: [
     // 局部可以通过 SkipThrottle Throttle 跳过或覆盖全局配置
     ThrottlerModule.forRoot({
-      ttl: Number(getEnv(CompassEnv.THROTTLER_TTL, '60')),
-      limit: Number(getEnv(CompassEnv.THROTTLER_LIMIT, '10')),
+      // 单位秒
+      ttl: Number(getEnv(CompassEnv.THROTTLER_TTL)),
+      // 单位时间内限制的次数
+      limit: Number(getEnv(CompassEnv.THROTTLER_LIMIT)),
     }),
     ...allModules,
   ],

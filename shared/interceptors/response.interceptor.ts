@@ -1,5 +1,5 @@
 import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
-import { Observable, map } from 'rxjs';
+import { Observable, map, catchError, throwError } from 'rxjs';
 import { HttpResponse } from '@shared';
 import { Response } from 'express';
 
@@ -18,6 +18,14 @@ export default class ResponseInterceptor implements NestInterceptor {
         }
         httpRespCtx.status(resp.getHttpStatus());
         return resp.getResponse();
+      }),
+      catchError((err) => {
+        // 将validate异常的数据消息组合成message
+        if (err?.response?.message && Array.isArray(err.response.message)) {
+          // eslint-disable-next-line no-param-reassign
+          err.response.message = err.response.message.join(';');
+        }
+        return throwError(() => err);
       }),
     );
   }
