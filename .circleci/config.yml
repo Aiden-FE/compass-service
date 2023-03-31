@@ -13,19 +13,18 @@ jobs:
       - checkout
       - restore_cache:
             keys:
-              - v1-dependencies-{{ checksum "package.json" }}
-              - v1-dependencies-
+              - v2-dependencies-{{ checksum "package.json" }}
+              - v2-dependencies-
       - run:
             command: |
-              npm install -g pnpm
-              pnpm config set registry https://registry.npmmirror.com/
-              pnpm install
-              pnpm run lint
-              pnpm run test
+              npm config set registry https://registry.npmmirror.com/
+              npm install
+              npm run lint
+              npm run test
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: v2-dependencies-{{ checksum "package.json" }}
   build:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
@@ -38,15 +37,15 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
+            - v2-dependencies-{{ checksum "package.json" }}
+            - v2-dependencies-
       - run:
           command: |
             apt-get update
             apt-get -q -y install openssl
-            pnpm config set registry https://registry.npmmirror.com/
-            pnpm install
-            pnpm run build
+            npm config set registry https://registry.npmmirror.com/
+            npm install
+            npm run build
       - persist_to_workspace:
           root: ~/compass
           paths:
