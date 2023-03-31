@@ -17,11 +17,11 @@ jobs:
               - v1-dependencies-
       - run:
             command: |
-              npm install -g pnpm
-              pnpm config set registry https://registry.npmmirror.com/
-              pnpm install
-              pnpm run lint
-              pnpm run test
+#              npm install -g pnpm
+              npm config set registry https://registry.npmmirror.com/
+              npm install
+              npm run lint
+              npm run test
       - save_cache:
           paths:
             - node_modules
@@ -44,9 +44,9 @@ jobs:
           command: |
             apt-get update
             apt-get -q -y install openssl
-            pnpm config set registry https://registry.npmmirror.com/
-            pnpm install
-            pnpm run build
+            npm config set registry https://registry.npmmirror.com/
+            npm install
+            npm run build
       - persist_to_workspace:
           root: ~/compass
           paths:
