@@ -5,6 +5,7 @@ export enum ResponseCode {
   // 1004XX含义参考: https://www.5axxw.com/wiki/content/sydn5o
   ERROR = 100400, // 业务异常
   UNAUTHORIZED = 100401, // 未授权异常
+  FORBIDDEN = 100403, // 禁止访问,验证不通过
   NOT_FOUND = 100404, // 找不到相关资源
   // 101XXX 自行定义的状态码
   ER_DUP_ENTRY = 101001, // unique重复

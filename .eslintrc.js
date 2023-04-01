@@ -15,5 +15,6 @@ module.exports = {
   ignorePatterns: ['.eslintrc.js'],
   rules: {
     'max-classes-per-file': 'off', // dto内会声明多个dto class
+    '@typescript-eslint/no-throw-literal': 'off', // 支持 throw new HttpResponse() 快捷抛出返回并终止程序
   },
 };

@@ -40,6 +40,34 @@
 
 支持.env文件控制环境变量,示例可见: .env.example,复制示例文件进入.env文件后按需配置即可
 
+### 支持Google reCAPTCHA v3 人机校验
+
+客户端:
+
+```html
+<!-- 插入recaptcha脚本并指定key,如果是国内host需要替换为www.recaptcha.net -->
+<script src="https://www.google.com/recaptcha/api.js?render=reCAPTCHA_site_key"></script>
+
+<script>
+  // 当点击某个提交按钮时进行人机静默校验,否则应该进行双重认证或拒绝认证
+  function onClick(e) {
+    e.preventDefault();
+    // 提示: reCAPTCHA_site_key为您在Google ReCaptcha注册的网站key
+    grecaptcha.ready(function() {
+      // action各种含义参考: https://developers.google.com/recaptcha/docs/v3?hl=zh-cn#interpreting_the_score
+      grecaptcha.execute('reCAPTCHA_site_key', {action: 'login'}).then(function(token) {
+        // 在此处添加您的逻辑,把表单数据跟token一起提供给后端校验
+      });
+    });
+  }
+</script>
+```
+
+服务端:
+.env文件内 设置 COMPASS_RECAPTCHA_SECRET 环境变量为您在Google ReCaptcha注册的后台key
+
+对应受保护接口在执行逻辑前将收到的 token 提交 apps/compass-service/src/modules/oauth/oauth.service.ts内的 verifyRecaptchaToken 方法处理
+
 ### 接口多版本支持
 
 用法示例如下:
