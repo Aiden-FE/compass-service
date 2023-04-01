@@ -269,7 +269,7 @@ export class OauthController {
    * 第二个参数可选,类型是 'AND' | 'OR',默认是'AND',即所有声明的权限都必须具备,OR则代表声明的权限具备任意一个均可
    * @param user @User()装饰器可以快捷的拿到授权通过后的用户信息数据
    */
-  @Permissions(PERMISSIONS.COMMON_USER_QUERY)
+  @Auth(PERMISSIONS.COMMON_USER_QUERY)
   @Get('test')
   async test(@User() user: any) {
     return user;

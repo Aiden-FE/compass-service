@@ -1,6 +1,6 @@
 export const IS_PUBLIC_KEY = 'isPublic';
 
-export const PERMISSIONS_KEY = 'PERMISSIONS';
+export const AUTH_KEY = 'AUTH';
 
 export enum PERMISSIONS {
   /** 权限相关 */
