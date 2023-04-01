@@ -18,7 +18,7 @@ export interface AbstractResponse<Data = null> {
 }
 
 export interface HttpResponseOption<Data = unknown> extends AbstractResponse<Data> {
-  responseType: 'json' | 'string';
+  responseType: 'json' | 'text';
   httpStatus: HttpStatus;
 }
 
@@ -50,7 +50,7 @@ export class HttpResponse<Data = null> {
 
   getResponse() {
     switch (this.option.responseType) {
-      case 'string':
+      case 'text':
         return this.option.data;
       case 'json':
       default:
