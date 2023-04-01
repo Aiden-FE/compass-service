@@ -223,12 +223,22 @@ export class ExampleController {
 export class ExampleController {
   @Get('test')
   test() {
-    return 'Hello world.'; // 实际响应: { statusCode: 200, data: 'Hello world.', message: '' }
+    return 'Hello world.'; // 实际响应: { statusCode: 100200, data: 'Hello world.', message: '请求成功' } HttpStatus = 200
   }
 
   @Get('test2')
-  test2(): string {
-    return new Response('Hello world.', { responseType: 'text' }); // 实际响应: 'Hello world.'
+  test2() {
+    return new HttpResponse('Hello world.', { responseType: 'text' }); // 实际响应: 'Hello world.'
+  }
+  
+  @Get('test3')
+  test3() {
+    // 尽管是throw,但是客户端收到的返回依旧以HttpResponse配置为准,可以用来快捷中断程序逻辑执行,又控制响应的状态与数据
+    // 实际响应: { statusCode: 100400, data: 'Hello world.', message: '请求成功' } HttpStatus = 403
+    throw new HttpResponse('Hello world.', {
+      statusCode: ResponseCode.ERROR,
+      httpStatus: HttpStatus.FORBIDDEN,
+    });
   }
 }
 ```
