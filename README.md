@@ -2,17 +2,21 @@
 
 ## 项目启动
 
-`pnpm install` 安装依赖
+`npm install` 安装依赖
 
 根目录新建 .env 文件, 复制 .env.example 内容到 .env 文件,并按需调整配置内容.
 
-`pnpm start:dev` 开发模式启动
+`npm run start:dev` 开发模式启动
 
-`pnpm format` 执行代码格式化
+`npm run start:prod` 生产模式启动
 
-`pnpm lint` 执行代码检查
+`npm run format` 执行代码格式化
 
-根据自身业务实际情况,修改项目内 FIXME: 部分的逻辑
+`npm run lint` 执行代码检查
+
+根据自身业务实际情况,修改项目内 "FIXME: " 标记部分的逻辑
+
+`npm run build` 构建项目
 
 ## 特性
 
@@ -21,6 +25,8 @@
 `nest g app [project_name]` 创建一个子应用到monorepo
 
 `nest g lib [library_name]` 创建一个包到monorepo
+
+`./shared` 文件夹内直接添加可被共享的资源文件
 
 ### Typescript/Jest/Airbnb Eslint/Prettier
 
@@ -33,14 +39,6 @@
 ### 支持环境变量控制
 
 支持.env文件控制环境变量,示例可见: .env.example,复制示例文件进入.env文件后按需配置即可
-
-### 支持Swagger文档
-
-`npm run start:dev` 或其他start启动项目后,访问/docs路径
-
-### helmet 安全的响应头设置
-
-在 `apps/compass-service/src/middleware/index.ts` 路径内启用
 
 ### 接口多版本支持
 
@@ -93,10 +91,6 @@ export class ExampleController {
 }
 ```
 
-### 默认启用 express json,urlencoded 中间件
-
-在 `apps/compass-service/src/middleware/express.middleware.ts` 内启用
-
 ### 约束接口进参,移除非白名单属性,自动转换数据为符合预期的类型
 
 通过`shared/config/index.ts`下的validationOption可调整选项
@@ -105,7 +99,7 @@ export class ExampleController {
 
 ```typescript
 import { IsNumber, IsString } from 'class-validator';
-import { Body } from '@nestjs/common';
+import { Body, Optional } from '@nestjs/common';
 import { validateMultipleDto } from '@shared';
 
 class ADto {
@@ -118,6 +112,15 @@ class BDto {
   age: number;
 }
 
+class CDto {
+  @IsString()
+  name: string;
+
+  @Optional()
+  @IsString()
+  address?: string
+}
+
 @Controller('example')
 export class ExampleController {
   @Get('test')
@@ -126,12 +129,62 @@ export class ExampleController {
     validateMultipleDto(body, [ADto, BDto]);
     return 'Hello world.';
   }
+
+  /**
+   * @description 假如入参是 { name: 'test', test: 'test' }
+   * 实际body会是 { name: 'test' }, test属性会被自动移除
+   */
+  @Get('test2')
+  test2(@Body() body: CDto) {
+    return 'Hello world.';
+  }
 }
 ```
 
 ### Prisma ORM 支持
+> 请确保.env文件配置已经就绪
 
-[使用引导](./prisma/README.md)
+####  如果你是新数据库
+
+使用 `npx prisma db push` 同步数据库架构,
+
+或者使用 `npx prisma migrate deploy` 根据迁移文件部署数据库架构
+
+同步数据库架构后执行`pnpm run seed`初始化数据库, 有问题或需要调整也可通过`pnpm run seed:rollback`回滚初始化动作
+
+#### 如果你是现有数据库架构
+
+`npx prisma db pull` 同步数据库架构到Prisma模型文件中
+
+`npx prisma format` 格式化schema文件
+
+`npx prisma generate` 生成Prisma Client文件
+
+#### 维护数据模型
+
+根据业务实际情况调整schema.prisma文件
+
+`npx prisma format` 格式化schema文件
+
+`npx prisma generate` 生成Prisma Client文件,每次scheme变更后都应执行
+
+`npx prisma-docs-generator serve` 基于generate的结果生成文档
+
+#### web浏览数据库数据
+
+`npx prisma studio` 通过web浏览数据库数据
+
+#### 迁移管理
+
+`npx prisma migrate dev --name [本次迁移的标题]` schema变更后创建迁移脚本
+
+`npx prisma migrate deploy` 执行迁移脚本
+
+`npx prisma migrate status` 查看当前迁移状态
+
+`npx prisma migrate resolve --applied [migrate_name]` 迁移到指定记录位置
+
+`npx prisma migrate resolve --rolled-back [migrate_name]` 回滚到指定记录位置
 
 ### 统一的响应拦截器,规范返回数据
 
@@ -151,6 +204,50 @@ export class ExampleController {
   }
 }
 ```
+
+### 支持JWT校验 + 用户权限集验证
+
+支持JWT授权,并按权限给予访问能力, 示例如下:
+
+```typescript
+@Controller('oauth')
+export class OauthController {
+  constructor(private jwtService: JwtService) {}
+
+  @Public() // public装饰器指明该接口跳过jwt验证,跳过权限验证,接口对外开放
+  @Post('login')
+  async login(@Body() body: EMailLoginDto | TelephoneLoginDto) {
+    validateMultipleDto(body, [EMailLoginDto, TelephoneLoginDto]);
+    // 查询用户信息
+    const userInfo = { ...body };
+    // FIXME: 请验证合规后再签发授权信息
+    const signStr = this.jwtService.sign(userInfo);
+    return { ...userInfo, token: signStr };
+  }
+
+  /**
+   * @description 该接口必须通过JWT验证后再通过用户权限验证,用户必须拥有对应权限
+   * Permissions 接受两个参数,第一个参数类型必须是 PERMISSIONS | PERMISSIONS[]
+   * 第二个参数可选,类型是 'AND' | 'OR',默认是'AND',即所有声明的权限都必须具备,OR则代表声明的权限具备任意一个均可
+   * @param user @User()装饰器可以快捷的拿到授权通过后的用户信息数据
+   */
+  @Permissions(PERMISSIONS.COMMON_USER_QUERY)
+  @Get('test')
+  async test(@User() user: any) {
+    return user;
+  }
+
+  /**
+   * @description 访问该接口必须先通过JWT验证
+   */
+  @Get('test2')
+  async test2(@User() user: any) {
+    return user;
+  }
+}
+```
+
+⚠️: 通常用户的权限数据不会签发在JWT内,所以请在`shared/guards/jwt-auth.guard.ts`内按需调整逻辑,根据用户拥有的的角色去聚合他所有的权限集,以提供给权限逻辑验证是否许可访问
 
 ### EMail邮件服务支持
 
@@ -214,51 +311,28 @@ export class ExampleService {
 }
 ```
 
-### 支持JWT校验 + 用户权限集验证
-
-支持JWT授权,并按权限给予访问能力, 示例如下:
-
-```typescript
-@Controller('oauth')
-export class OauthController {
-  constructor(private jwtService: JwtService) {}
-
-  @Public() // public装饰器指明该接口跳过jwt验证,跳过权限验证,接口对外开放
-  @Post('login')
-  async login(@Body() body: EMailLoginDto | TelephoneLoginDto) {
-    validateMultipleDto(body, [EMailLoginDto, TelephoneLoginDto]);
-    // 查询用户信息
-    const userInfo = { ...body };
-    // FIXME: 请验证合规后再签发授权信息
-    const signStr = this.jwtService.sign(userInfo);
-    return { ...userInfo, token: signStr };
-  }
-
-  /**
-   * @description 该接口必须通过JWT验证后再通过用户权限验证,用户必须拥有对应权限
-   * Permissions 接受两个参数,第一个参数类型必须是 PERMISSIONS | PERMISSIONS[]
-   * 第二个参数可选,类型是 'AND' | 'OR',默认是'AND',即所有声明的权限都必须具备,OR则代表声明的权限具备任意一个均可
-   * @param user @User()装饰器可以快捷的拿到授权通过后的用户信息数据
-   */
-  @Permissions(PERMISSIONS.COMMON_USER_QUERY)
-  @Get('test')
-  async test(@User() user: any) {
-    return user;
-  }
-}
-```
-
-⚠️: 通常用户的权限数据不会签发在JWT内,所以请在`shared/guards/jwt-auth.guard.ts`内按需调整逻辑,根据用户拥有的的角色去聚合他所有的权限集,以提供给权限逻辑验证是否许可访问
-
 ### 添加日志中间件,监控入站请求
 
 默认会将所有入站请求打印在控制台,日志级别为log级.
+
+
+### 支持Swagger文档
+
+`npm run start:dev` 或其他start启动项目后,访问/docs路径
+
+### helmet 安全的响应头设置
+
+在 `apps/compass-service/src/middleware/index.ts` 路径内启用
+
+### 默认启用 express json,urlencoded 中间件
+
+在 `apps/compass-service/src/middleware/express.middleware.ts` 内启用
 
 ### 集成circleci pipeline
 
 详见`.circleci/config.yml`
 
-### 2.0 移除的特性
+## 2.0 移除的特性
 
 * compression 移除,压缩支持应该在nginx层处理,而不在服务器
 * csurf 已废弃,不再采用
