@@ -383,3 +383,12 @@ export class ExampleService {
 * LoggerService 已移除,改为采用 @nestjs/common 内置的 Logger
 * 扩展的HttpException已被移除,改为采用 @nestjs/common 内置的 HttpException
 * SessionModule已被移除,这个模块并不适合在生产环境使用
+
+## TODO
+
+- [ ] 接入@compass-aiden/telegram http库
+- [ ] 完善Google ReCAPTCHA人机验证
+- [ ] 支持邮件注册并设置密码,以此登陆
+- [ ] 支持管理权限
+- [ ] 支持管理角色
+- [ ] 支持管理用户
