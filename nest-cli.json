@@ -36,6 +36,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/email/tsconfig.lib.json"
       }
+    },
+    "redis-manager": {
+      "type": "library",
+      "root": "libs/redis-manager",
+      "entryFile": "index",
+      "sourceRoot": "libs/redis-manager/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/redis-manager/tsconfig.lib.json"
+      }
     }
   }
 }

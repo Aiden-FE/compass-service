@@ -5,8 +5,10 @@ import { DBService } from '@app/db';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import JwtStrategy from '@shared/utils/jwt.strategy';
+import { RedisManagerService } from '@app/redis-manager';
 import { OauthController } from './oauth.controller';
 import { OauthService } from './oauth.service';
+import { UserService } from '../user/user.service';
 
 const importModules = [];
 const emailUser = getEnv(CompassEnv.EMAIL_USER);
@@ -38,6 +40,6 @@ if (emailUser && emailPassword) {
     }),
   ],
   controllers: [OauthController],
-  providers: [OauthService, DBService, JwtStrategy],
+  providers: [OauthService, DBService, RedisManagerService, JwtStrategy, UserService],
 })
 export class OauthModule {}

@@ -22,3 +22,11 @@ export function generatePaginationSQLParams(pagination: PaginationRequestFromURL
   }
   return result;
 }
+
+export function replaceStringParams(str: string, params: Record<string, string>) {
+  return Object.keys(params).reduce((lastStr, currentKey) => {
+    const currentValue = params[currentKey];
+    const reg = new RegExp(`:${currentKey}`, 'g');
+    return lastStr.replace(reg, currentValue);
+  }, str);
+}

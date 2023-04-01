@@ -1,21 +1,26 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Public, User, validateMultipleDto } from '@shared';
+import { HttpResponse, Public, User, validateMultipleDto } from '@shared';
 import { EMailLoginDto, TelephoneLoginDto } from './oauth.dto';
+import { OauthService } from './oauth.service';
 
 @Controller('oauth')
 export class OauthController {
-  constructor(private jwtService: JwtService) {}
+  constructor(private jwtService: JwtService, private oauthService: OauthService) {}
 
   @Public()
   @Post('login')
   async login(@Body() body: EMailLoginDto | TelephoneLoginDto) {
     validateMultipleDto(body, [EMailLoginDto, TelephoneLoginDto]);
-    // 查询用户信息
-    const userInfo = { ...body };
+    const result = await this.oauthService.validateLogin(body);
+
+    if (result instanceof HttpResponse) {
+      return result;
+    }
+
     // FIXME: 请验证合规后再签发授权信息
-    const signStr = this.jwtService.sign(userInfo);
-    return { ...userInfo, token: signStr };
+    const signStr = this.jwtService.sign(result);
+    return { ...result, token: signStr };
   }
 
   // @Permissions(PERMISSIONS.COMMON_USER_QUERY)

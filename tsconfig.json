@@ -36,6 +36,12 @@
       ],
       "@app/email/*": [
         "libs/email/src/*"
+      ],
+      "@app/redis-manager": [
+        "libs/redis-manager/src"
+      ],
+      "@app/redis-manager/*": [
+        "libs/redis-manager/src/*"
       ]
     }
   }

@@ -298,15 +298,21 @@ export class ExampleService {
 ```typescript
 // example.service.ts
 import { RedisService } from '@liaoliaots/nestjs-redis';
+import { RedisManagerService, CAPTCHA_REDIS_KEY } from '@app/redis-manager';
 
 @Injectable()
 export class ExampleService {
-  constructor(private redisService: RedisService) {
-  }
+  constructor(private redisService: RedisManagerService,) {}
 
-  setCache(msg: string) {
+  getCache(msg: string) {
     // 具体参考 https://github.com/liaoliaots/nestjs-redis/blob/HEAD/docs/latest/redis.md
-    this.redisService.set('key', msg);
+    this.redisService.get(CAPTCHA_REDIS_KEY, {
+      // 通过params替换CAPTCHA_REDIS_KEY内的变量值以定位到具体key
+      params: {
+        type: 'email',
+        uid: user.id,
+      }
+    });
   }
 }
 ```
