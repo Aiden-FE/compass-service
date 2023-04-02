@@ -74,11 +74,11 @@ workflows:
       - test
       - build:
           filters:
-            branches:
+            tag:
               only: /^v.*/
       - publish docker:
           requires:
             - build
           filters:
-            branches:
+            tag:
               only: /^v.*/
