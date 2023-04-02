@@ -25,6 +25,7 @@ jobs:
           paths:
             - node_modules
           key: v2-dependencies-{{ checksum "package.json" }}
+  # FIXME: 仅做示例,如需使用请按时间情况配置
   build:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
@@ -54,6 +55,7 @@ jobs:
             - package.json
             - start.sh
             - Dockerfile
+  # FIXME: 仅做示例,如需使用请按时间情况配置
   publish-docker:
     machine: true
     working_directory: ~/compass

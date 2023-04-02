@@ -384,11 +384,6 @@ export class ExampleService {
 * 扩展的HttpException已被移除,改为采用 @nestjs/common 内置的 HttpException
 * SessionModule已被移除,这个模块并不适合在生产环境使用
 
-## TODO
+## 模板预置接口文档
 
-- [ ] 接入@compass-aiden/telegram http库
-- [ ] 完善Google ReCAPTCHA人机验证
-- [ ] 支持邮件注册并设置密码,以此登陆
-- [ ] 支持管理权限
-- [ ] 支持管理角色
-- [ ] 支持管理用户
+[API Document](https://console-docs.apipost.cn/preview/247ae3093ccd69f9/d41109483a83663b)

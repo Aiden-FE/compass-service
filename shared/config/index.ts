@@ -26,3 +26,6 @@ export const envDefaultValues = {
   [CompassEnv.THROTTLER_TTL]: '60',
   [CompassEnv.THROTTLER_LIMIT]: '20',
 };
+
+/** FIXME: 系统邮件地址, 请替换为实际业务地址 */
+export const SYSTEM_EMAIL_ADDRESS = 'aiden_fe@outlook.com';
