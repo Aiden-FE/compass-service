@@ -54,7 +54,7 @@ jobs:
             - package.json
             - start.sh
             - Dockerfile
-  publish docker:
+  publish-docker:
     machine: true
     working_directory: ~/compass
     steps:
