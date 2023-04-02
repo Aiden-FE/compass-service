@@ -69,22 +69,23 @@ jobs:
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
+  lint-and-test:
+    jobs:
+      - test:
+          filters:
+            branches:
+              only: /.*/
   build-and-publish-image:
     jobs:
-      - test
+      - test:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
       - build:
           requires:
             - test
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
-      - publish docker:
+      - publish-docker:
           requires:
             - build
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
