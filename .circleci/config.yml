@@ -79,13 +79,17 @@ workflows:
     jobs:
       - test:
           filters:
-            branches:
-              ignore: /.*/
             tags:
               only: /^v.*/
       - build:
           requires:
             - test
+          filters:
+            tags:
+              only: /^v.*/
       - publish-docker:
           requires:
             - build
+          filters:
+            tags:
+              only: /^v.*/
