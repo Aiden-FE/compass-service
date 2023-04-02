@@ -76,11 +76,15 @@ workflows:
           requires:
             - test
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v.*/
       - publish docker:
           requires:
             - build
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v.*/
