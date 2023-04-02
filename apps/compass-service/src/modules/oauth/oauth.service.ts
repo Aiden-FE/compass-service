@@ -1,9 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { DBService } from '@app/db';
-import { CompassEnv, getEnv, HttpResponse, ResponseCode } from '@shared';
+import {
+  CompassEnv,
+  getEnv,
+  GoogleRecaptchaRequest,
+  HttpResponse,
+  replaceVariablesInString,
+  ResponseCode,
+  SYSTEM_EMAIL_ADDRESS,
+  verifyRecaptcha,
+} from '@shared';
 import { RedisManagerService, CAPTCHA_REDIS_KEY } from '@app/redis-manager';
+import { random } from 'lodash';
+import { INVITE_REGISTER_TEMPLATE } from '@app/email/templates';
+import { EmailService } from '@app/email';
+import { EMailLoginDto, TelephoneLoginDto } from './oauth.dto';
 import { UserService } from '../user/user.service';
-import { EMailLoginDto, GoogleRecaptchaRequest, TelephoneLoginDto } from './oauth.dto';
 
 @Injectable()
 export class OauthService {
@@ -11,52 +23,92 @@ export class OauthService {
     private dbService: DBService,
     private userService: UserService,
     private redisService: RedisManagerService,
+    private emailService: EmailService,
   ) {}
 
+  async sendEmailCaptcha(data: { email: string }) {
+    const code = random(100000, 999999);
+    // 将code码记入缓存
+    await this.redisService.set(CAPTCHA_REDIS_KEY, String(code), {
+      expiresIn: 1000 * 60 * 5,
+      params: { type: 'email', account: data.email },
+    });
+    // 发出邮件
+    return this.emailService.sendMail({
+      from: SYSTEM_EMAIL_ADDRESS,
+      to: data.email,
+      subject: '注册验证',
+      html: replaceVariablesInString(INVITE_REGISTER_TEMPLATE, {
+        context: 'Compass Service',
+        code: code.toString(),
+      }),
+    });
+  }
+
+  /**
+   * @description 验证 recaptcha token
+   * @param token
+   * @param ip
+   * @param option
+   */
   // eslint-disable-next-line class-methods-use-this
-  async verifyRecaptchaToken(token: string, ip?: string) {
-    // 将token提交给google Recaptcha服务 POST https://www.google.com/recaptcha/api/siteverify, 国内host换成www.recaptcha.net
+  async verifyRecaptchaToken(
+    token: string,
+    ip?: string,
+    option = {
+      score: 0.9,
+    },
+  ) {
+    // dev环境始终放开
+    if (getEnv(CompassEnv.NODE_ENV) === 'development') {
+      return;
+    }
     const params: GoogleRecaptchaRequest = {
       secret: getEnv(CompassEnv.RECAPTCHA_SECRET),
       response: token,
       remoteip: ip,
     };
-    console.log(params);
+    const result = await verifyRecaptcha(params);
     // 如果验证不通过则直接返回响应
-    // if (!result.success || success.score > 0.9) {
-    //   throw new HttpResponse(null, {
-    //     statusCode: ResponseCode.FORBIDDEN,
-    //     message: '访问异常,请重试',
-    //   });
-    // }
+    if (!result.success || result.score > (option.score || 0.9)) {
+      throw new HttpResponse(null, {
+        statusCode: ResponseCode.FORBIDDEN,
+        message: result['error-codes']?.length ? result['error-codes'].join(';') : '验证失败',
+      });
+    }
   }
 
   async validateLogin(body: EMailLoginDto | TelephoneLoginDto) {
     const isEmailLogin = !!(body as EMailLoginDto).email;
-    const user = await this.userService.findUser({
-      email: (body as EMailLoginDto).email,
-      telephone: (body as TelephoneLoginDto).telephone,
-      password: body.password,
-    });
-
-    if (!user) {
-      throw new HttpResponse(null, {
-        statusCode: ResponseCode.ERROR,
-        message: '账号或密码错误',
-      });
-    }
 
     const sentCaptcha = await this.redisService.get(CAPTCHA_REDIS_KEY, {
       params: {
         type: isEmailLogin ? 'email' : 'sms',
-        uid: user.id,
+        account: isEmailLogin ? (body as EMailLoginDto).email : (body as TelephoneLoginDto).telephone,
       },
     });
 
     if (sentCaptcha !== body.captcha) {
       throw new HttpResponse(null, {
-        statusCode: ResponseCode.ERROR,
+        statusCode: ResponseCode.FORBIDDEN,
         message: '验证码错误',
+      });
+    }
+
+    const query: Partial<EMailLoginDto | TelephoneLoginDto> = { password: body.password };
+
+    if (isEmailLogin) {
+      (query as EMailLoginDto).email = (body as EMailLoginDto).email;
+    } else {
+      (query as TelephoneLoginDto).telephone = (body as TelephoneLoginDto).telephone;
+    }
+
+    const user = await this.userService.findUser(query);
+
+    if (!user) {
+      throw new HttpResponse(null, {
+        statusCode: ResponseCode.FORBIDDEN,
+        message: '账号或密码错误',
       });
     }
 

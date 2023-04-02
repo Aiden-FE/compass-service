@@ -36,13 +36,15 @@ export class RedisManagerService {
     option?: {
       bucket?: 'default';
       params?: Record<string, any>; // 替换objectKey中的变量值
+      /** 单位毫秒, 默认: 一分钟过期 */
+      expiresIn?: number;
     },
   ) {
     let objectKeyStr: string = objectKey;
-    if (option.params) {
+    if (option?.params) {
       objectKeyStr = replaceStringParams(objectKeyStr, option.params);
     }
-    return this.getClient(option.bucket).set(objectKeyStr, data);
+    return this.getClient(option?.bucket).set(objectKeyStr, data, 'PX', option.expiresIn || 1000 * 60);
   }
 
   public getClient(bucket?: 'default') {
