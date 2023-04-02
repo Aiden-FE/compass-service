@@ -73,6 +73,8 @@ workflows:
     jobs:
       - test
       - build:
+          requires:
+            - build
           filters:
             tags:
               only: /^v.*/

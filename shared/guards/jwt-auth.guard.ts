@@ -1,8 +1,8 @@
 import { AuthGuard } from '@nestjs/passport';
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { IS_PUBLIC_KEY, PERMISSIONS_KEY } from '@shared/config';
-import { PermissionsOption } from '@shared';
+import { IS_PUBLIC_KEY, AUTH_KEY } from '@shared/config';
+import { AuthOption } from '@shared';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -41,7 +41,7 @@ export default class JwtAuthGuard extends AuthGuard('jwt') {
 
   private async handleUserPermissions(context: ExecutionContext) {
     // 处理接口所许可的权限
-    const permissionsOption = this.reflector.get<PermissionsOption>(PERMISSIONS_KEY, context.getHandler());
+    const permissionsOption = this.reflector.get<AuthOption>(AUTH_KEY, context.getHandler());
     // 如果未使用 @Auth() 装饰器的接口意味着不需要具体权限码授权
     if (!permissionsOption || !permissionsOption.permissions?.length) return true;
     const { user } = context.switchToHttp().getRequest();
