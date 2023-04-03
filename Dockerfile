@@ -20,6 +20,10 @@ ARG COMPASS_EMAIL_USER
 # 系统邮箱密码
 ARG COMPASS_EMAIL_PASSWORD
 
+# 警告: 这种方式设置env的方式很危险,容器被pull后是可以inspect看到的.
+# 准确的做法是敏感的env需要通过运行前指定,而不是镜像阶段指定,例如:
+# docker run --env key=value
+# docker compose 文件内声明 environment
 ENV NODE_ENV=${NODE_ENV}
 ENV COMPASS_JWT_SECRET=${COMPASS_JWT_SECRET}
 ENV COMPASS_MYSQL_DATABASE_URL=${COMPASS_MYSQL_DATABASE_URL}
