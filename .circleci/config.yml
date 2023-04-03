@@ -89,6 +89,10 @@ workflows:
           filters:
             branches:
               only: dev/publish
+          context:
+            - aiden-privacy
+            - aiden-docker
+            - aiden-server
   build-and-publish-image:
     jobs:
       - test:
