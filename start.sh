@@ -6,4 +6,4 @@ npm install --production
 
 npx prisma generate
 
-node dist/apps/compass/main.js
+node dist/apps/compass-service/main.js
