@@ -1,9 +1,11 @@
 import { INestApplication } from '@nestjs/common';
-import helmet from 'helmet';
 import { LoggerMiddleware } from '@shared';
 import provideExpressMiddleware from './express.middleware';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 const requestIP = require('request-ip');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const helmet = require('helmet');
 
 export default async function provideMiddleware(app: INestApplication) {
   app.use(requestIP.mw()); // req.clientIp 客户真实ip

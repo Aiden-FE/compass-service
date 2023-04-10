@@ -6,7 +6,7 @@ import providePlugins from './plugins';
 import provideMiddleware from './middleware';
 
 const LISTEN_PORT = Number(getEnv(CompassEnv.LISTEN_PORT));
-Logger.overrideLogger(getEnv(CompassEnv.NODE_ENV) === 'development' ? ['log'] : ['warn']);
+Logger.overrideLogger(['log']);
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

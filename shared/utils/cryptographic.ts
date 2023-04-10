@@ -1,5 +1,6 @@
 import { CompassEnv, getEnv, HttpResponse, ResponseCode } from '@shared';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 const forge = require('node-forge');
 
 export function encodeMD5(msg: string, secret = getEnv(CompassEnv.PRIVACY_DATA_SECRET)) {

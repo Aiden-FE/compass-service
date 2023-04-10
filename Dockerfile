@@ -9,22 +9,6 @@ MAINTAINER Aiden_FE <Aiden_FE@outlook.com>
 
 # 声明构建环境 development/production
 ENV NODE_ENV production
-# JWT验证密钥
-#ENV COMPASS_JWT_SECRET
-# mysql连接地址
-#ENV COMPASS_MYSQL_DATABASE_URL
-# redis host
-#ENV COMPASS_REDIS_HOST
-# redis port
-ENV COMPASS_REDIS_PORT 6379
-# redis 连接密码
-#ENV COMPASS_REDIS_PASSWORD
-# Recaptcha 密钥
-#ENV COMPASS_RECAPTCHA_SECRET
-# 系统邮箱账号
-#ENV COMPASS_EMAIL_USER
-# 系统邮箱密码
-#ENV COMPASS_EMAIL_PASSWORD
 
 ARG WORKDIR_DIR=/root/compass
 
