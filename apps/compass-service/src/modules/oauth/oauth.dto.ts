@@ -21,8 +21,15 @@ export class EMailLoginDto extends AbstractLoginDto {
   email: string;
 }
 
+export class ValidateRecaptchaDto {
+  /** google人机验证website secret后返回的token */
+  @IsString()
+  token: string;
+}
+
 // 人机验证并发送邮件验证码
 export class ValidAndSendEmailCodeDto {
+  /** server人机验证通过后返回的hash token */
   @IsString()
   token: string;
 

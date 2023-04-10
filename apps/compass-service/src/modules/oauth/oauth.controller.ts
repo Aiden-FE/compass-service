@@ -1,9 +1,20 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { HttpResponse, Public, ResponseCode, validateMultipleDto } from '@shared';
+import { encodeMD5, HttpResponse, Public, ResponseCode, validateMultipleDto } from '@shared';
 import { EmailService } from '@app/email';
-import { CAPTCHA_REDIS_KEY, RedisManagerService } from '@app/redis-manager';
-import { EMailLoginDto, EmailRegisterDto, TelephoneLoginDto, ValidAndSendEmailCodeDto } from './oauth.dto';
+import {
+  CAPTCHA_REDIS_KEY,
+  EMAIL_CAPTCHA_LOCKED_REDIS_KEY,
+  RECAPTCHA_REDIS_KEY,
+  RedisManagerService,
+} from '@app/redis-manager';
+import {
+  EMailLoginDto,
+  EmailRegisterDto,
+  TelephoneLoginDto,
+  ValidAndSendEmailCodeDto,
+  ValidateRecaptchaDto,
+} from './oauth.dto';
 import { OauthService } from './oauth.service';
 import { UserService } from '../user/user.service';
 
@@ -18,11 +29,41 @@ export class OauthController {
   ) {}
 
   @Public()
+  @Post('recaptcha/validate')
+  async validateRecaptcha(@Body() body: ValidateRecaptchaDto) {
+    try {
+      await this.oauthService.verifyRecaptchaToken(body.token);
+      const hash = encodeMD5(body.token);
+      this.redisService.set(RECAPTCHA_REDIS_KEY, 'true', { params: { hash } });
+      return hash;
+    } catch (err) {
+      return new HttpResponse(false, { statusCode: ResponseCode.BAD_REQUEST });
+    }
+  }
+
+  @Public()
   @Post('captcha/email')
   async emailRegister(@Body() body: ValidAndSendEmailCodeDto) {
-    await this.oauthService.verifyRecaptchaToken(body.token);
+    const result = await this.redisService.get(RECAPTCHA_REDIS_KEY, { params: { hash: body.token } });
+    if (!result || result !== 'true') {
+      return new HttpResponse(false, {
+        statusCode: ResponseCode.FORBIDDEN,
+        message: '人机验证验证结果异常,请重新进行人机验证',
+      });
+    }
+    if (await this.redisService.get(EMAIL_CAPTCHA_LOCKED_REDIS_KEY, { params: { account: body.email } })) {
+      return new HttpResponse(false, {
+        statusCode: ResponseCode.FORBIDDEN,
+        message: '请勿频繁发送验证码',
+      });
+    }
     await this.oauthService.sendEmailCaptcha({ email: body.email });
-    return '验证码发送成功';
+    // 一分钟锁定,防止重复发送
+    await this.redisService.set(EMAIL_CAPTCHA_LOCKED_REDIS_KEY, 'true', {
+      params: { account: body.email },
+      expiresIn: 1000 * 60,
+    });
+    return new HttpResponse(null, { message: '验证码发送成功' });
   }
 
   @Public()
@@ -57,7 +98,7 @@ export class OauthController {
     if (!user) {
       return new HttpResponse(null, {
         message: '注册失败',
-        statusCode: ResponseCode.ERROR,
+        statusCode: ResponseCode.BAD_REQUEST,
       });
     }
     // 签发token

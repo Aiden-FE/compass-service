@@ -4,6 +4,7 @@ import { PaginationRequestFromURLDto } from '@shared/interfaces';
 export * from './env';
 export { default as JwtStrategy } from './jwt.strategy';
 export { default as validateMultipleDto } from './validate-mutille-dto';
+export * from './cryptographic';
 
 /**
  * @description 包装分页查询参数,确保查询参数正确

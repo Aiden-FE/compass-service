@@ -6,8 +6,6 @@ import { JwtAuthGuard } from '@shared/guards';
 import { APP_GUARD } from '@nestjs/core';
 import { RedisManagerModule, RedisManagerService } from '@app/redis-manager';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import allModules from './modules';
 
 @Module({
@@ -30,9 +28,8 @@ import allModules from './modules';
     }),
     ...allModules,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
-    AppService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
