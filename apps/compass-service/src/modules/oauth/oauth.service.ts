@@ -12,7 +12,7 @@ import {
 } from '@shared';
 import { RedisManagerService, CAPTCHA_REDIS_KEY } from '@app/redis-manager';
 import { random } from 'lodash';
-import { INVITE_REGISTER_TEMPLATE } from '@app/email/templates';
+import { EMAIL_CAPTCHA_TEMPLATE } from '@app/email/templates';
 import { EmailService } from '@app/email';
 import { EMailLoginDto, TelephoneLoginDto } from './oauth.dto';
 import { UserService } from '../user/user.service';
@@ -30,15 +30,14 @@ export class OauthService {
     const code = random(100000, 999999);
     // 将code码记入缓存
     await this.redisService.set(CAPTCHA_REDIS_KEY, String(code), {
-      expiresIn: 1000 * 60 * 5,
       params: { type: 'email', account: data.email },
     });
     // 发出邮件
     return this.emailService.sendMail({
       from: SYSTEM_EMAIL_ADDRESS,
       to: data.email,
-      subject: '注册验证',
-      html: replaceVariablesInString(INVITE_REGISTER_TEMPLATE, {
+      subject: '邮箱验证',
+      html: replaceVariablesInString(EMAIL_CAPTCHA_TEMPLATE, {
         context: 'Compass Service',
         code: code.toString(),
       }),

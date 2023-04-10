@@ -1,6 +1,7 @@
 # compass-service 2.0
 
 ## 项目启动
+> 首次启动请先参考下方 Prisma 部分同步数据库架构
 
 `npm install` 安装依赖
 
@@ -236,7 +237,7 @@ export class ExampleController {
     // 尽管是throw,但是客户端收到的返回依旧以HttpResponse配置为准,可以用来快捷中断程序逻辑执行,又控制响应的状态与数据
     // 实际响应: { statusCode: 100400, data: 'Hello world.', message: '请求成功' } HttpStatus = 403
     throw new HttpResponse('Hello world.', {
-      statusCode: ResponseCode.ERROR,
+      statusCode: ResponseCode.BAD_REQUEST,
       httpStatus: HttpStatus.FORBIDDEN,
     });
   }
