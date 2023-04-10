@@ -1,0 +1,44 @@
+version: "3"
+networks:
+  local_network:
+    driver: bridge
+services:
+  mysql:
+    image: mysql:${MYSQL_IMAGE_VERSION}
+    restart: always
+    networks:
+      - local_network
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - ${MYSQL_VOLUMES_CONF_DIR}:/etc/mysql/conf.d
+      - ${MYSQL_VOLUMES_DATA_DIR}:/var/lib/mysql
+    ports:
+      - "${MYSQL_PORT}:3306"
+
+  redis:
+    image: redis:${REDIS_IMAGE_VERSION}
+    restart: always
+    networks:
+      - local_network
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf", "--requirepass", $REDIS_PASSWORD ]
+    volumes:
+      - ${REDIS_VOLUMES_CONF}:/usr/local/etc/redis/redis.conf
+      - ${REDIS_VOLUMES_DATA_DIR}:/data
+    ports:
+      - ${REDIS_PORT}:6379
+
+  postgres:
+    image: postgres:${POSTGRES_IMAGE_VERSION}
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - local_network
+    volumes:
+      - ${POSTGRES_VOLUMES_DATA_DIR}:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT}:5432
