@@ -1,7 +1,9 @@
 # compass-service 2.0
 
 ## 项目启动
-> 首次启动请先参考下方 Prisma 部分同步数据库架构
+> 首次启动请先参考下方 [Prisma ORM 管理](./README.md#Prisma ORM 管理) 部分同步数据库架构
+> 
+> 如果您不具备可用的mysql,redis或是可选的postgres环境,可以参考[部署基础环境](./deploy/README.md#部署基础环境)一键启动基础环境
 
 `npm install` 安装依赖
 
@@ -170,7 +172,7 @@ export class ExampleController {
 }
 ```
 
-### Prisma ORM 支持
+### Prisma ORM 管理
 > 请确保.env文件配置已经就绪
 
 ####  如果你是新数据库
