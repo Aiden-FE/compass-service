@@ -4,6 +4,6 @@ npm config set registry https://registry.npmmirror.com/
 
 npm install --production
 
-npx prisma generate
+#npx prisma generate
 
 node dist/apps/compass-service/main.js

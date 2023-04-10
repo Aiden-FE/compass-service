@@ -64,7 +64,7 @@ jobs:
       - run:
           command: |
             echo "$DOCKERHUB_ACCESS_TOKEN" | docker login -u $DOCKERHUB_USERNAME --password-stdin
-            docker build -t $DOCKERHUB_USERNAME/compass:latest . --build-arg COMPASS_JWT_SECRET=$COMPASS_JWT_SECRET --build-arg COMPASS_MYSQL_DATABASE_URL=$COMPASS_MYSQL_DATABASE_URL --build-arg COMPASS_REDIS_HOST=$COMPASS_REDIS_HOST --build-arg COMPASS_REDIS_PORT=$COMPASS_REDIS_PORT --build-arg COMPASS_REDIS_PASSWORD=$COMPASS_REDIS_PASSWORD --build-arg COMPASS_RECAPTCHA_SECRET=${COMPASS_RECAPTCHA_SECRET} --build-arg COMPASS_EMAIL_USER=${COMPASS_EMAIL_USER} --build-arg COMPASS_EMAIL_PASSWORD=${COMPASS_EMAIL_PASSWORD}
+            docker build -t $DOCKERHUB_USERNAME/compass:latest .
             docker tag $DOCKERHUB_USERNAME/compass:latest $DOCKERHUB_USERNAME/compass:${CIRCLE_TAG}
             docker push --all-tags $DOCKERHUB_USERNAME/compass
 
