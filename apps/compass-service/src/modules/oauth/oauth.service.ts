@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DBService } from '@app/db';
 import {
   CompassEnv,
+  encodeMD5,
   getEnv,
   GoogleRecaptchaRequest,
   HttpResponse,
@@ -10,7 +11,7 @@ import {
   SYSTEM_EMAIL_ADDRESS,
   verifyRecaptcha,
 } from '@shared';
-import { RedisManagerService, CAPTCHA_REDIS_KEY } from '@app/redis-manager';
+import { CAPTCHA_REDIS_KEY, RedisManagerService } from '@app/redis-manager';
 import { random } from 'lodash';
 import { EMAIL_CAPTCHA_TEMPLATE } from '@app/email/templates';
 import { EmailService } from '@app/email';
@@ -87,6 +88,13 @@ export class OauthService {
       },
     });
 
+    if (!sentCaptcha) {
+      throw new HttpResponse(null, {
+        statusCode: ResponseCode.FORBIDDEN,
+        message: '请先获取验证码',
+      });
+    }
+
     if (sentCaptcha !== body.captcha) {
       throw new HttpResponse(null, {
         statusCode: ResponseCode.FORBIDDEN,
@@ -94,7 +102,7 @@ export class OauthService {
       });
     }
 
-    const query: Partial<EMailLoginDto | TelephoneLoginDto> = { password: body.password };
+    const query: Partial<EMailLoginDto | TelephoneLoginDto> = { password: encodeMD5(body.password) };
 
     if (isEmailLogin) {
       (query as EMailLoginDto).email = (body as EMailLoginDto).email;

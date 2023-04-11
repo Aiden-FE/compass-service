@@ -1,4 +1,4 @@
-import { PERMISSIONS } from '../shared/config/constants';
+import { encodeMD5, PERMISSIONS } from '@shared';
 
 export const SEED_CONTEXT = 'SeedScript';
 
@@ -59,6 +59,6 @@ export const INIT_ROLE = {
 };
 
 export const INIT_USER = {
-  password: 'example123456',
+  password: encodeMD5('example123456'),
   email: 'root@example.com',
 };

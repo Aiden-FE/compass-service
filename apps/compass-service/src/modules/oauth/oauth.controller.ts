@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { encodeMD5, HttpResponse, Public, ResponseCode, validateMultipleDto } from '@shared';
+import { encodeMD5, HttpResponse, Public, ResponseCode, User, validateMultipleDto } from '@shared';
 import { EmailService } from '@app/email';
 import {
   CAPTCHA_REDIS_KEY,
@@ -8,6 +8,7 @@ import {
   RECAPTCHA_REDIS_KEY,
   RedisManagerService,
 } from '@app/redis-manager';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   EMailLoginDto,
   EmailRegisterDto,
@@ -18,6 +19,7 @@ import {
 import { OauthService } from './oauth.service';
 import { UserService } from '../user/user.service';
 
+@ApiTags('开放授权')
 @Controller('oauth')
 export class OauthController {
   constructor(
@@ -28,6 +30,10 @@ export class OauthController {
     private redisService: RedisManagerService,
   ) {}
 
+  @ApiOperation({
+    summary: '人机验证',
+    description: '当web网站通过website key获取到来自谷歌的解析token后提供给本接口进行可用性验证',
+  })
   @Public()
   @Post('recaptcha/validate')
   async validateRecaptcha(@Body() body: ValidateRecaptchaDto) {
@@ -41,6 +47,9 @@ export class OauthController {
     }
   }
 
+  @ApiOperation({
+    summary: '发送邮箱验证码',
+  })
   @Public()
   @Post('captcha/email')
   async emailRegister(@Body() body: ValidAndSendEmailCodeDto) {
@@ -66,6 +75,9 @@ export class OauthController {
     return new HttpResponse(null, { message: '验证码发送成功' });
   }
 
+  @ApiOperation({
+    summary: '邮箱注册',
+  })
   @Public()
   @Post('register/email')
   async verifyRecaptcha(@Body() body: EmailRegisterDto) {
@@ -109,6 +121,10 @@ export class OauthController {
     });
   }
 
+  @ApiOperation({
+    summary: '登录',
+    description: '可通过手机号或者邮箱账号进行登录',
+  })
   @Public()
   @Post('login')
   async login(@Body() body: EMailLoginDto | TelephoneLoginDto) {
@@ -117,5 +133,15 @@ export class OauthController {
 
     const signStr = this.jwtService.sign(result);
     return { ...result, token: signStr };
+  }
+
+  @ApiOperation({
+    summary: '获取当前用户信息',
+    description: '返回当前用户的脱敏信息',
+  })
+  // eslint-disable-next-line class-methods-use-this
+  @Post('userinfo')
+  async getCurrentUserInfo(@User() user: unknown) {
+    return user;
   }
 }
