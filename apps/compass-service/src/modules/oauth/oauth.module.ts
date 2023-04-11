@@ -8,6 +8,7 @@ import { RedisManagerService } from '@app/redis-manager';
 import { OauthController } from './oauth.controller';
 import { OauthService } from './oauth.service';
 import { UserService } from '../user/user.service';
+import { RoleService } from '../role/role.service';
 
 const importModules = [];
 const emailUser = getEnv(CompassEnv.EMAIL_USER);
@@ -39,6 +40,6 @@ if (emailUser && emailPassword) {
     }),
   ],
   controllers: [OauthController],
-  providers: [OauthService, DBService, RedisManagerService, JwtStrategy, UserService],
+  providers: [OauthService, DBService, RedisManagerService, JwtStrategy, UserService, RoleService],
 })
 export class OauthModule {}

@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { DBService } from '@app/db';
 import { User } from '@prisma/client';
+import { encodeMD5 } from '@shared';
 
 @Injectable()
 export class UserService {
   constructor(private dbService: DBService) {}
-  
+
   /**
    * @description 创建用户
    * @param user
@@ -15,6 +16,7 @@ export class UserService {
     return this.dbService.user.create({
       data: {
         ...user,
+        password: encodeMD5(user.password),
       },
       select: {
         id: true,

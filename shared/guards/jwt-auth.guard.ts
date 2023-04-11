@@ -40,18 +40,14 @@ export default class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   private async handleUserPermissions(context: ExecutionContext) {
+    const { user } = context.switchToHttp().getRequest();
+    if (!user) return false; // 用户信息不存在则拒绝访问
     // 处理接口所许可的权限
     const permissionsOption = this.reflector.get<AuthOption>(AUTH_KEY, context.getHandler());
     // 如果未使用 @Auth() 装饰器的接口意味着不需要具体权限码授权
     if (!permissionsOption || !permissionsOption.permissions?.length) return true;
-    const { user } = context.switchToHttp().getRequest();
-    /**
-     * FIXME: 这里的user.permissions应该是通过user.roles前往数据库(先查redis内角色的权限缓存通常是个好的选择)聚合权限集并去重得出的
-     * 原因在于产线的权限集通常会膨胀的很大,不适合混合在jwt内.
-     * user.permissions = await this.getUserPermissions(user.roles);
-     */
-    // 没有权限则直接拒绝访问
-    if (!user || !user.permissions?.length) return false;
+    // 没有权限则直接拒绝访问, 这里的权限由JwtStrategy.validate方法附加而来
+    if (!user.permissions?.length) return false;
     // 或权限处理
     if (permissionsOption.mode === 'OR') {
       return permissionsOption.permissions.some((key) => user.permissions.includes(key));
