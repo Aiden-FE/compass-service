@@ -3,6 +3,8 @@ import { provideSwaggerPlugin, ResponseInterceptor, validationOption } from '@sh
 import { DBService } from '@app/db';
 
 export default async function providePlugins(app: INestApplication) {
+  // 统一接口前缀
+  app.setGlobalPrefix('api');
   // 接口多版本
   app.enableVersioning({
     type: VersioningType.URI,
