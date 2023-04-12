@@ -1,8 +1,7 @@
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import isObject from 'lodash/isObject';
-import uniq from 'lodash/uniq';
+import { isObject, uniq } from 'lodash';
 import { CompassEnv } from '../config';
 import { getEnv } from './env';
 import { RoleService } from '../../apps/compass-service/src/modules/role/role.service';

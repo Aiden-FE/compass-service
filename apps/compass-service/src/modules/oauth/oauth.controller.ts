@@ -99,14 +99,14 @@ export class OauthController {
     }
     // eslint-disable-next-line no-param-reassign
     delete body.captcha;
-    let user = this.userService.findUser({ email: body.email });
+    let user = await this.userService.findUser({ email: body.email });
     if (user) {
       return new HttpResponse(null, {
         message: '该用户已存在',
         statusCode: ResponseCode.FORBIDDEN,
       });
     }
-    user = this.userService.createUser(body);
+    user = await this.userService.createUser(body);
     if (!user) {
       return new HttpResponse(null, {
         message: '注册失败',
@@ -130,16 +130,16 @@ export class OauthController {
   async login(@Body() body: EMailLoginDto | TelephoneLoginDto) {
     validateMultipleDto(body, [EMailLoginDto, TelephoneLoginDto]);
     const result = await this.oauthService.validateLogin(body);
-
+    // FIXME: 需要更新用户的最近登录时间
     const signStr = this.jwtService.sign(result);
     return { ...result, token: signStr };
   }
 
+  // eslint-disable-next-line class-methods-use-this
   @ApiOperation({
     summary: '获取当前用户信息',
     description: '返回当前用户的脱敏信息',
   })
-  // eslint-disable-next-line class-methods-use-this
   @Post('userinfo')
   async getCurrentUserInfo(@User() user: unknown) {
     return user;

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DBService } from '@app/db';
+import { RoleCreateDto } from './role.dto';
 
 @Injectable()
 export class RoleService {
@@ -12,6 +13,17 @@ export class RoleService {
       },
       include: {
         permissions: true,
+      },
+    });
+  }
+
+  async createRole(body: RoleCreateDto) {
+    return this.dbService.role.create({
+      data: {
+        ...body,
+        permissions: {
+          connect: body.permissions?.map((key) => ({ key })) || [],
+        },
       },
     });
   }

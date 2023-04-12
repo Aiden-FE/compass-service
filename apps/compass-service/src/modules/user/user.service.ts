@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DBService } from '@app/db';
 import { User } from '@prisma/client';
 import { encodeMD5 } from '@shared';
+import { UserContextDto } from './user.dto';
 
 @Injectable()
 export class UserService {
@@ -13,18 +14,17 @@ export class UserService {
    * @param selectOption
    */
   async createUser(user: Partial<User> & { password: string }, selectOption: any = {}) {
-    return this.dbService.user.create({
+    const userModel = await this.dbService.user.create({
       data: {
         ...user,
         password: encodeMD5(user.password),
       },
       select: {
         id: true,
-        name: true,
+        telephone: true,
+        email: true,
         nickname: true,
         gender: true,
-        birthday: true,
-        lastLoginTime: true,
         roles: {
           select: {
             id: true,
@@ -33,6 +33,7 @@ export class UserService {
         ...selectOption,
       },
     });
+    return this.handleDisplayUserInfo(userModel);
   }
 
   /**
@@ -41,15 +42,14 @@ export class UserService {
    * @param selectOption
    */
   async findUser(user: Partial<User>, selectOption: any = {}) {
-    return this.dbService.user.findFirst({
+    const userModel = await this.dbService.user.findFirst({
       where: user,
       select: {
         id: true,
-        name: true,
+        telephone: true,
+        email: true,
         nickname: true,
         gender: true,
-        birthday: true,
-        lastLoginTime: true,
         roles: {
           select: {
             id: true,
@@ -58,5 +58,19 @@ export class UserService {
         ...selectOption,
       },
     });
+    return this.handleDisplayUserInfo(userModel);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private handleDisplayUserInfo(user: any): UserContextDto | null {
+    if (user.roles?.length) {
+      // eslint-disable-next-line no-param-reassign
+      user.roles = user.roles.map((role) => role.id);
+    }
+    if (user.telephone) {
+      // eslint-disable-next-line no-param-reassign
+      user.telephone = `*******${user.telephone.slice(user.telephone.length - 4)}`;
+    }
+    return user || null;
   }
 }

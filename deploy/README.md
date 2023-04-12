@@ -8,7 +8,7 @@
 `docker compose up -d` 一键启动mysql, redis, postgres容器环境,也可修改`docker-compose.yml`文件,按需启动所需容器
 
 ## 数据库数据初始化
-> 执行前需要确保已经同步Prisma数据库架构,如未同步请参考 [Prisma ORM](../README.md#Prisma ORM 管理)
+> 执行前需要确保已经同步Prisma数据库架构,如未同步请参考 [Prisma ORM](../README.md#prisma)
 
 根据需要调整当前目录下的 `constants.ts` 文件
 
