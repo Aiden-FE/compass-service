@@ -1,7 +1,7 @@
 # compass-service 2.0
 
 ## 项目启动
-> 首次启动请先参考下方 [Prisma ORM 管理](./README.md#Prisma ORM 管理) 部分同步数据库架构
+> 首次启动请先参考下方 [Prisma ORM 管理](#prisma) 部分同步数据库架构
 > 
 > 如果您不具备可用的mysql,redis或是可选的postgres环境,可以参考[部署基础环境](./deploy/README.md#部署基础环境)一键启动基础环境
 
@@ -172,7 +172,7 @@ export class ExampleController {
 }
 ```
 
-### Prisma ORM 管理
+### <span id="prisma">PrismaORM 管理</span>
 > 请确保.env文件配置已经就绪
 
 ####  如果你是新数据库
@@ -362,10 +362,9 @@ export class ExampleService {
 
 默认会将所有入站请求打印在控制台,日志级别为log级.
 
-
 ### 支持Swagger文档
 
-`npm run start:dev` 或其他start启动项目后,访问/docs路径
+`npm run start:dev` 或其他start启动项目后,访问/api/docs路径
 
 ### helmet 安全的响应头设置
 
