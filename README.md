@@ -1,3 +1,33 @@
+<!-- TOC -->
+* [compass-service 2.0](#compass-service-20)
+  * [项目启动](#项目启动)
+  * [特性](#特性)
+    * [Monorepo 结构,易于扩展服务及公共资源沉淀](#monorepo-结构易于扩展服务及公共资源沉淀)
+    * [Typescript/Jest/Airbnb Eslint/Prettier](#typescriptjestairbnb-eslintprettier)
+    * [支持环境变量控制](#支持环境变量控制)
+    * [支持Google reCAPTCHA v3 人机校验](#支持google-recaptcha-v3-人机校验)
+    * [接口多版本支持](#接口多版本支持)
+    * [接口限流保护](#接口限流保护)
+    * [约束接口进参,移除非白名单属性,自动转换数据为符合预期的类型](#约束接口进参移除非白名单属性自动转换数据为符合预期的类型)
+    * [<span id="prisma">PrismaORM 管理</span>](#span-idprisma-prismaorm-管理-span)
+      * [如果你是新数据库](#如果你是新数据库)
+      * [如果你是现有数据库架构](#如果你是现有数据库架构)
+      * [维护数据模型](#维护数据模型)
+      * [web浏览数据库数据](#web浏览数据库数据)
+      * [迁移管理](#迁移管理)
+    * [统一的响应拦截器,规范返回数据](#统一的响应拦截器规范返回数据)
+    * [支持JWT校验 + 用户权限集验证](#支持jwt校验--用户权限集验证)
+    * [EMail邮件服务支持](#email邮件服务支持)
+    * [支持连接redis服务](#支持连接redis服务)
+    * [添加日志中间件,监控入站请求](#添加日志中间件监控入站请求)
+    * [支持Swagger API文档](#支持swagger-api文档)
+    * [helmet 安全的响应头设置](#helmet-安全的响应头设置)
+    * [默认启用 express json,urlencoded 中间件](#默认启用-express-jsonurlencoded-中间件)
+    * [集成circleciCI自动集成部署](#集成circlecici自动集成部署)
+  * [2.0 移除的特性](#20-移除的特性)
+  * [更多文档信息](#更多文档信息)
+<!-- TOC -->
+
 # compass-service 2.0
 
 ## 项目启动
@@ -60,6 +90,16 @@
       // action各种含义参考: https://developers.google.com/recaptcha/docs/v3?hl=zh-cn#interpreting_the_score
       grecaptcha.execute('reCAPTCHA_site_key', {action: 'login'}).then(function(token) {
         // 在此处添加您的逻辑,把表单数据跟token一起提供给后端校验
+        fetch('/api/v1/recaptcha/validate', {
+          method: 'POST',
+          body: JSON.stringify({ token }),
+        })
+          .then(resp => resp.json())
+          .then(result => {
+            if (result.statusCode === 100200 && result.data) {
+              console.log('签发的许可 token: ', result.data);
+            }
+          });
       });
     });
   }
@@ -78,13 +118,13 @@
 ```typescript
 @Controller('example')
 export class ExampleController {
-  // 访问地址: /v1/example/test
+  // 访问地址: /api/v1/example/test
   @Get('test')
   test(): string {
     return 'This is v1 endpoint.';
   }
 
-  // 访问地址: /v2/example/test
+  // 访问地址: /api/v2/example/test
   @Version('2')
   @Get('test')
   test2(): string {
@@ -177,9 +217,7 @@ export class ExampleController {
 
 ####  如果你是新数据库
 
-使用 `npx prisma db push` 同步数据库架构,
-
-或者使用 `npx prisma migrate deploy` 根据迁移文件部署数据库架构
+使用 `npx prisma db push` 同步数据库架构
 
 同步数据库架构后执行`pnpm run seed`初始化数据库, 有问题或需要调整也可通过`pnpm run seed:rollback`回滚初始化动作
 
@@ -199,7 +237,7 @@ export class ExampleController {
 
 `npx prisma generate` 生成Prisma Client文件,每次scheme变更后都应执行
 
-`npx prisma-docs-generator serve` 基于generate的结果生成文档
+`npx prisma-docs-generator serve` 基于generate的结果生成模型文档
 
 #### web浏览数据库数据
 
@@ -253,16 +291,18 @@ export class ExampleController {
 ```typescript
 @Controller('oauth')
 export class OauthController {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private oauthService: OauthService,
+  ) {}
 
   @Public() // public装饰器指明该接口跳过jwt验证,跳过权限验证,接口对外开放
   @Post('login')
   async login(@Body() body: EMailLoginDto | TelephoneLoginDto) {
     validateMultipleDto(body, [EMailLoginDto, TelephoneLoginDto]);
-    // 查询用户信息
-    const userInfo = { ...body };
-    // FIXME: 请验证合规后再签发授权信息
-    const signStr = this.jwtService.sign(userInfo);
+    // 验证登录是否有效,通过后签发token
+    const result = await this.oauthService.validateLogin(body);
+    const signStr = this.jwtService.sign(result);
     return { ...userInfo, token: signStr };
   }
 
@@ -288,11 +328,13 @@ export class OauthController {
 }
 ```
 
-⚠️: 通常用户的权限数据不会签发在JWT内,所以请在`shared/guards/jwt-auth.guard.ts`内按需调整逻辑,根据用户拥有的的角色去聚合他所有的权限集,以提供给权限逻辑验证是否许可访问
+`shared/utils/jwt.strategy.ts` 内会根据用户所具备的角色去聚合用户权限集
+
+`shared/guards/jwt-auth.guard.ts` 具体在处理用户访问权限守卫
 
 ### EMail邮件服务支持
 
-.env 文件内提供正确的 COMPASS_EMAIL_USER 及 COMPASS_EMAIL_PASSWORD 变量, 示例如下:
+.env 文件内提供正确的 COMPASS_EMAIL_USER 及 COMPASS_EMAIL_PASSWORD 变量, 使用示例如下:
 
 ```typescript
 import { EmailModule, EmailService } from '@app/email';
@@ -319,15 +361,17 @@ export class ExampleService {
   
   sendEmailMsg(msg: string) {
     // 具体参考 https://nodemailer.com/message/#common-fields
-    this.emailService.sendMail({
-      from: 'example@outlook.com',
-      to: 'target@example.com',
-      subject: '邮件主题',
-      html: `
-        邮件内容
-        ${msg}
-      `
-    })
+    // 发出邮件
+    return this.emailService.sendMail({
+      from: SYSTEM_EMAIL_FROM, // 声明发送方
+      to: data.email, // 发送的目标
+      subject: '邮箱验证', // 主题
+      // 实际发送内容, replaceVariablesInString用来对模板内的变量做替换
+      html: replaceVariablesInString(EMAIL_CAPTCHA_TEMPLATE, {
+        context: 'Compass Service',
+        code: code.toString(),
+      }),
+    });
   }
 }
 ```
@@ -345,9 +389,9 @@ import { RedisManagerService, CAPTCHA_REDIS_KEY } from '@app/redis-manager';
 export class ExampleService {
   constructor(private redisService: RedisManagerService,) {}
 
-  getCache(msg: string) {
+  async getCache(msg: string) {
     // 具体参考 https://github.com/liaoliaots/nestjs-redis/blob/HEAD/docs/latest/redis.md
-    this.redisService.get(CAPTCHA_REDIS_KEY, {
+    await this.redisService.get(CAPTCHA_REDIS_KEY, {
       // 通过params替换CAPTCHA_REDIS_KEY内的变量值以定位到具体key
       params: {
         type: 'email',
@@ -355,14 +399,22 @@ export class ExampleService {
       }
     });
   }
+  
+  async setCache() {
+    const code = random(100000, 999999);
+    // 将code码记入缓存
+    await this.redisService.set(CAPTCHA_REDIS_KEY, String(code), {
+      params: { type: 'email', account: data.email },
+    });
+  }
 }
 ```
 
 ### 添加日志中间件,监控入站请求
 
-默认会将所有入站请求打印在控制台,日志级别为log级.
+默认会将所有入站请求打印在控制台,日志级别为log级.逻辑详见`shared/middleware/logger.middleware.ts`
 
-### 支持Swagger文档
+### 支持Swagger API文档
 
 `npm run start:dev` 或其他start启动项目后,访问/api/docs路径
 
@@ -374,7 +426,7 @@ export class ExampleService {
 
 在 `apps/compass-service/src/middleware/express.middleware.ts` 内启用
 
-### 集成circleci pipeline
+### 集成circleciCI自动集成部署
 
 详见`.circleci/config.yml`
 
@@ -386,6 +438,8 @@ export class ExampleService {
 * 扩展的HttpException已被移除,改为采用 @nestjs/common 内置的 HttpException
 * SessionModule已被移除,这个模块并不适合在生产环境使用
 
-## 模板预置接口文档
+## 更多文档信息
 
-[API Document](https://console-docs.apipost.cn/preview/247ae3093ccd69f9/d41109483a83663b)
+`npx prisma-docs-generator serve` 数据模型文档
+
+`npm run start:dev` 启动服务后访问: `http://localhost:8080/api/docs`

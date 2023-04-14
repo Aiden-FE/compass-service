@@ -28,4 +28,4 @@ export const envDefaultValues = {
 };
 
 /** FIXME: 系统邮件地址, 请替换为实际业务地址 */
-export const SYSTEM_EMAIL_ADDRESS = 'aiden_fe@outlook.com';
+export const SYSTEM_EMAIL_FROM = 'aiden_fe@outlook.com';

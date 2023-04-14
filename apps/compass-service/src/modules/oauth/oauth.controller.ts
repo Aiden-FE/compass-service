@@ -1,6 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Logger, Post } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { encodeMD5, HttpResponse, Public, ResponseCode, User, validateMultipleDto } from '@shared';
+import { encodeMD5, HttpResponse, Public, ResponseCode, validateMultipleDto } from '@shared';
 import { EmailService } from '@app/email';
 import {
   CAPTCHA_REDIS_KEY,
@@ -18,6 +18,7 @@ import {
 } from './oauth.dto';
 import { OauthService } from './oauth.service';
 import { UserService } from '../user/user.service';
+import { APP_LOG_CONTEXT } from '../../config';
 
 @ApiTags('开放授权')
 @Controller('oauth')
@@ -130,18 +131,12 @@ export class OauthController {
   async login(@Body() body: EMailLoginDto | TelephoneLoginDto) {
     validateMultipleDto(body, [EMailLoginDto, TelephoneLoginDto]);
     const result = await this.oauthService.validateLogin(body);
-    // FIXME: 需要更新用户的最近登录时间
+    try {
+      await this.userService.updateUser(result.id, { lastLoginTime: new Date() });
+    } catch (e) {
+      Logger.warn(e, APP_LOG_CONTEXT);
+    }
     const signStr = this.jwtService.sign(result);
     return { ...result, token: signStr };
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  @ApiOperation({
-    summary: '获取当前用户信息',
-    description: '返回当前用户的脱敏信息',
-  })
-  @Post('userinfo')
-  async getCurrentUserInfo(@User() user: unknown) {
-    return user;
   }
 }
