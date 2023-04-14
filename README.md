@@ -30,6 +30,8 @@
 
 # compass-service 2.0
 
+本项目会以具体业务为实例不断完善内容,如果你希望使用本项目作为基础模板快速搭建项目,可使用[Compass Template](https://github.com/Aiden-FE/compass-template)内的Nest模板
+
 ## 项目启动
 > 首次启动请先参考下方 [Prisma ORM 管理](#prisma) 部分同步数据库架构
 > 
