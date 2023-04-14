@@ -8,7 +8,7 @@ import {
   HttpResponse,
   replaceVariablesInString,
   ResponseCode,
-  SYSTEM_EMAIL_ADDRESS,
+  SYSTEM_EMAIL_FROM,
   verifyRecaptcha,
 } from '@shared';
 import { CAPTCHA_REDIS_KEY, RedisManagerService } from '@app/redis-manager';
@@ -35,7 +35,7 @@ export class OauthService {
     });
     // 发出邮件
     return this.emailService.sendMail({
-      from: SYSTEM_EMAIL_ADDRESS,
+      from: SYSTEM_EMAIL_FROM,
       to: data.email,
       subject: '邮箱验证',
       html: replaceVariablesInString(EMAIL_CAPTCHA_TEMPLATE, {

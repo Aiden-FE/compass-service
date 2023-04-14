@@ -7,8 +7,7 @@ import { RoleService } from './role.service';
 @ApiTags('角色管理')
 @Controller('role')
 export class RoleController {
-  constructor(private roleService: RoleService) {
-  }
+  constructor(private roleService: RoleService) {}
 
   @ApiOperation({
     summary: '创建角色',

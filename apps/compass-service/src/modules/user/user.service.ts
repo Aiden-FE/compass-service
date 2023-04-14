@@ -8,6 +8,13 @@ import { UserContextDto } from './user.dto';
 export class UserService {
   constructor(private dbService: DBService) {}
 
+  updateUser(userId: string, user: Omit<Partial<User>, 'id'>) {
+    return this.dbService.user.update({
+      where: { id: userId },
+      data: user,
+    });
+  }
+
   /**
    * @description 创建用户
    * @param user
