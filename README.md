@@ -253,9 +253,9 @@ export class ExampleController {
 
 `npx prisma migrate status` 查看当前迁移状态
 
-`npx prisma migrate resolve --applied [migrate_name]` 迁移到指定记录位置
-
 `npx prisma migrate resolve --rolled-back [migrate_name]` 回滚到指定记录位置
+
+当创建迁移文件后,如果你手动进行了迁移,可通过`npx prisma migrate resolve --applied [migrate_name]`将该次迁移手动标记为完成
 
 ### 统一的响应拦截器,规范返回数据
 

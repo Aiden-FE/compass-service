@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DBService } from '@app/db';
 import { User } from '@prisma/client';
-import { encodeMD5 } from '@shared';
 import { UserContextDto } from './user.dto';
 
 @Injectable()
@@ -24,7 +23,6 @@ export class UserService {
     const userModel = await this.dbService.user.create({
       data: {
         ...user,
-        password: encodeMD5(user.password),
       },
       select: {
         id: true,
@@ -70,11 +68,11 @@ export class UserService {
 
   // eslint-disable-next-line class-methods-use-this
   private handleDisplayUserInfo(user: any): UserContextDto | null {
-    if (user.roles?.length) {
+    if (user?.roles?.length) {
       // eslint-disable-next-line no-param-reassign
       user.roles = user.roles.map((role) => role.id);
     }
-    if (user.telephone) {
+    if (user?.telephone) {
       // eslint-disable-next-line no-param-reassign
       user.telephone = `*******${user.telephone.slice(user.telephone.length - 4)}`;
     }
