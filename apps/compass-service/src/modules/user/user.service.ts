@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DBService } from '@app/db';
 import { User } from '@prisma/client';
-import { encodeMD5 } from '@shared';
 import { UserContextDto } from './user.dto';
 
 @Injectable()
