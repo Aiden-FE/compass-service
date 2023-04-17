@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { DBService } from '@app/db';
 import {
   CompassEnv,
-  encodeMD5,
   getEnv,
   GoogleRecaptchaRequest,
   HttpResponse,
@@ -102,7 +101,7 @@ export class OauthService {
       });
     }
 
-    const query: Partial<EMailLoginDto | TelephoneLoginDto> = { password: encodeMD5(body.password) };
+    const query: Partial<EMailLoginDto | TelephoneLoginDto> = { password: body.password };
 
     if (isEmailLogin) {
       (query as EMailLoginDto).email = (body as EMailLoginDto).email;
