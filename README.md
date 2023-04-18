@@ -9,12 +9,13 @@
     * [接口多版本支持](#接口多版本支持)
     * [接口限流保护](#接口限流保护)
     * [约束接口进参,移除非白名单属性,自动转换数据为符合预期的类型](#约束接口进参移除非白名单属性自动转换数据为符合预期的类型)
-    * [<span id="prisma">PrismaORM 管理</span>](#span-idprisma-prismaorm-管理-span)
+    * [<span id="prisma">PrismaORM 数据库管理</span>](#span-idprisma-prismaorm-数据库管理-span)
       * [如果你是新数据库](#如果你是新数据库)
       * [如果你是现有数据库架构](#如果你是现有数据库架构)
       * [维护数据模型](#维护数据模型)
       * [web浏览数据库数据](#web浏览数据库数据)
       * [迁移管理](#迁移管理)
+      * [隐私数据保护](#隐私数据保护)
     * [统一的响应拦截器,规范返回数据](#统一的响应拦截器规范返回数据)
     * [支持JWT校验 + 用户权限集验证](#支持jwt校验--用户权限集验证)
     * [EMail邮件服务支持](#email邮件服务支持)
@@ -99,7 +100,7 @@
           .then(resp => resp.json())
           .then(result => {
             if (result.statusCode === 100200 && result.data) {
-              console.log('签发的许可 token: ', result.data);
+              console.log('签发的临时许可 token: %s, 请在五分钟内使用此token登录', result.data);
             }
           });
       });
@@ -111,7 +112,10 @@
 服务端:
 .env文件内 设置 COMPASS_RECAPTCHA_SECRET 环境变量为您在Google ReCaptcha注册的后台key
 
-对应受保护接口在执行逻辑前将收到的 token 提交 apps/compass-service/src/modules/oauth/oauth.service.ts内的 verifyRecaptchaToken 方法处理
+1. 接口`/api/v1/recaptcha/validate`收到`{ token }`后会提交google验证
+2. 验证通过后会下发一个五分钟有效的临时token
+3. 用户在登录时可将用户信息与临时token一并提交登录接口
+4. 登录接口验证token属于签发的授权token并账号密码正确即登录成功
 
 ### 接口多版本支持
 
@@ -214,7 +218,7 @@ export class ExampleController {
 }
 ```
 
-### <span id="prisma">PrismaORM 管理</span>
+### <span id="prisma">PrismaORM 数据库管理</span>
 > 请确保.env文件配置已经就绪
 
 ####  如果你是新数据库
@@ -257,6 +261,20 @@ export class ExampleController {
 
 当创建迁移文件后,如果你手动进行了迁移,可通过`npx prisma migrate resolve --applied [migrate_name]`将该次迁移手动标记为完成
 
+#### 隐私数据保护
+
+针对隐私数据入库及查询做二次加密保护,不可通过数据库直接查看隐私数据.
+
+`libs/db/src/db.service.ts` 内的useUserHook方法默认已对用户密码做不可逆加密入库
+
+不可逆加密隐私数据参考如下:
+
+```typescript
+import { encodeMD5 } from '@shared';
+
+encodeMD5('password'); // 第二个参数为密钥, 默认取.env内的 COMPASS_PRIVACY_DATA_SECRET 值
+```
+
 ### 统一的响应拦截器,规范返回数据
 
 在`shared/interceptors/response.interceptor.ts`定义的默认拦截逻辑,示例如下:
@@ -298,7 +316,7 @@ export class OauthController {
     private oauthService: OauthService,
   ) {}
 
-  @Public() // public装饰器指明该接口跳过jwt验证,跳过权限验证,接口对外开放
+  @Public() // public装饰器指明该接口完全开放,跳过jwt验证,跳过权限验证
   @Post('login')
   async login(@Body() body: EMailLoginDto | TelephoneLoginDto) {
     validateMultipleDto(body, [EMailLoginDto, TelephoneLoginDto]);
@@ -310,18 +328,18 @@ export class OauthController {
 
   /**
    * @description 该接口必须通过JWT验证后再通过用户权限验证,用户必须拥有对应权限
-   * Permissions 接受两个参数,第一个参数类型必须是 PERMISSIONS | PERMISSIONS[]
+   * Auth 接受两个参数,第一个参数类型必须是 PERMISSIONS | PERMISSIONS[]
    * 第二个参数可选,类型是 'AND' | 'OR',默认是'AND',即所有声明的权限都必须具备,OR则代表声明的权限具备任意一个均可
    * @param user @User()装饰器可以快捷的拿到授权通过后的用户信息数据
    */
   @Auth(PERMISSIONS.COMMON_USER_QUERY)
   @Get('test')
-  async test(@User() user: any) {
+  async test(@User() user: unknown) {
     return user;
   }
 
   /**
-   * @description 访问该接口必须先通过JWT验证
+   * @description 默认访问该接口必须先通过JWT验证
    */
   @Get('test2')
   async test2(@User() user: any) {
@@ -332,16 +350,20 @@ export class OauthController {
 
 `shared/utils/jwt.strategy.ts` 内会根据用户所具备的角色去聚合用户权限集
 
-`shared/guards/jwt-auth.guard.ts` 具体在处理用户访问权限守卫
+`shared/guards/jwt-auth.guard.ts` 具体处理用户访问权限的守卫
 
 ### EMail邮件服务支持
 
 .env 文件内提供正确的 COMPASS_EMAIL_USER 及 COMPASS_EMAIL_PASSWORD 变量, 使用示例如下:
 
 ```typescript
-import { EmailModule, EmailService } from '@app/email';
-
 // example.module.ts
+import { EmailModule, EmailService } from '@app/email';
+import { CompassEnv, getEnv } from '@shared';
+
+const emailUser = getEnv(CompassEnv.EMAIL_USER);
+const emailPassword = getEnv(CompassEnv.EMAIL_PASSWORD);
+
 @Module({
   imports: [
     // 默认使用outlook服务,请按需调整, 详见: https://nodemailer.com/usage/#setting-it-up
@@ -384,7 +406,6 @@ export class ExampleService {
 
 ```typescript
 // example.service.ts
-import { RedisService } from '@liaoliaots/nestjs-redis';
 import { RedisManagerService, CAPTCHA_REDIS_KEY } from '@app/redis-manager';
 
 @Injectable()
@@ -397,7 +418,7 @@ export class ExampleService {
       // 通过params替换CAPTCHA_REDIS_KEY内的变量值以定位到具体key
       params: {
         type: 'email',
-        uid: user.id,
+        account: user.email,
       }
     });
   }
