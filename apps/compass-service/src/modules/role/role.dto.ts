@@ -1,6 +1,5 @@
-import { IsArray, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsArray, IsString, MaxLength, MinLength, IsOptional } from 'class-validator';
 import { DESC_MAX_LIMIT, TITLE_MAX_LIMIT, TITLE_MIN_LIMIT } from '@shared';
-import { Optional } from '@nestjs/common';
 
 export class RoleCreateDto {
   @IsString()
@@ -8,11 +7,11 @@ export class RoleCreateDto {
   @MinLength(TITLE_MIN_LIMIT)
   name: string;
 
-  @Optional()
+  @IsOptional()
   @MaxLength(DESC_MAX_LIMIT)
   description?: string;
 
-  @Optional()
+  @IsOptional()
   @IsArray()
   permissions?: string[];
 }

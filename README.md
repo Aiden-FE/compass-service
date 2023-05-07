@@ -175,8 +175,8 @@ export class ExampleController {
 当遇见多个Dto联合类型时,内置ValidationPipe失效,可按照下列示例处理:
 
 ```typescript
-import { IsNumber, IsString } from 'class-validator';
-import { Body, Optional } from '@nestjs/common';
+import { IsNumber, IsString, IsOptional } from 'class-validator';
+import { Body } from '@nestjs/common';
 import { validateMultipleDto } from '@shared';
 
 class ADto {
@@ -193,7 +193,7 @@ class CDto {
   @IsString()
   name: string;
 
-  @Optional()
+  @IsOptional()
   @IsString()
   address?: string
 }
@@ -250,6 +250,8 @@ export class ExampleController {
 `npx prisma studio` 通过web浏览数据库数据
 
 #### 迁移管理
+
+`npx prisma db push` 本地或开发环境可通过此命令直接同步数据库架构 警告: 请不要在测试或生产等正式环境使用此命令
 
 `npx prisma migrate dev --name [本次迁移的标题]` schema变更后创建迁移脚本
 
