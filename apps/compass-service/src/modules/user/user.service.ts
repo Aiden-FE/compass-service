@@ -19,7 +19,7 @@ export class UserService {
    * @param user
    * @param selectOption
    */
-  async createUser(user: Partial<User> & { password: string }, selectOption: any = {}) {
+  async createUser(user: Partial<User>, selectOption: any = {}) {
     const userModel = await this.dbService.user.create({
       data: {
         ...user,

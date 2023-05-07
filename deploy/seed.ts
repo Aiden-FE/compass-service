@@ -24,7 +24,7 @@ async function main() {
     },
   });
   Logger.log(
-    `初始化数据创建完成,管理员账号: ${INIT_USER.email}, 混淆后的密码hash是: ${INIT_USER.password} 请尽快修改密码`,
+    `初始化数据创建完成,管理员账号: ${INIT_USER.email}, 初始密码为: example123456 请尽快修改密码`,
     SEED_CONTEXT,
   );
 }

@@ -14,7 +14,9 @@ import { CAPTCHA_REDIS_KEY, RedisManagerService } from '@app/redis-manager';
 import { random } from 'lodash';
 import { EMAIL_CAPTCHA_TEMPLATE } from '@app/email/templates';
 import { EmailService } from '@app/email';
-import { EMailLoginDto, TelephoneLoginDto } from './oauth.dto';
+import { getWechatAuthInfo } from '@shared/http/wechat';
+import { promiseTask } from '@compass-aiden/utils';
+import { EMailLoginDto, TelephoneLoginDto, WechatAuthInfo } from './oauth.dto';
 import { UserService } from '../user/user.service';
 
 @Injectable()
@@ -119,5 +121,28 @@ export class OauthService {
     }
 
     return user;
+  }
+
+  static async getWechatAuthInfo(code: string) {
+    const [err, resp] = await promiseTask<WechatAuthInfo>(
+      getWechatAuthInfo({
+        appid: getEnv(CompassEnv.WECHAT_APPID),
+        secret: getEnv(CompassEnv.WECHAT_SECRET),
+        js_code: code,
+      }),
+    );
+    if (err) {
+      throw new HttpResponse(null, {
+        statusCode: ResponseCode.FORBIDDEN,
+        message: err?.message || err.toString(),
+      });
+    }
+    if (!resp.openid || !resp.session_key) {
+      throw new HttpResponse(null, {
+        statusCode: ResponseCode.FORBIDDEN,
+        message: resp.errmsg,
+      });
+    }
+    return resp;
   }
 }

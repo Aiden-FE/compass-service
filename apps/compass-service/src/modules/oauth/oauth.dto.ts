@@ -50,3 +50,17 @@ export class EmailRegisterDto {
   @Length(SMS_LENGTH_LIMIT)
   captcha: string;
 }
+
+// 微信登录
+export class WechatLoginDto {
+  @IsString()
+  code: string;
+}
+
+// 微信授权响应数据
+export interface WechatAuthInfo {
+  openid?: string;
+  session_key?: string;
+  errmsg?: string;
+  errcode?: number;
+}

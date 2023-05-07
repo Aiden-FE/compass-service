@@ -15,6 +15,7 @@ import {
   TelephoneLoginDto,
   ValidAndSendEmailCodeDto,
   ValidateRecaptchaDto,
+  WechatLoginDto,
 } from './oauth.dto';
 import { OauthService } from './oauth.service';
 import { UserService } from '../user/user.service';
@@ -138,5 +139,43 @@ export class OauthController {
     }
     const signStr = this.jwtService.sign(result);
     return { ...result, token: signStr };
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  @ApiOperation({
+    summary: '微信登录',
+    description: '微信账号登录',
+  })
+  @Public()
+  @Post('login/wechat')
+  async wechatLogin(@Body() body: WechatLoginDto) {
+    const authInfo = await OauthService.getWechatAuthInfo(body.code);
+    if (!authInfo) {
+      return new HttpResponse(null, {
+        statusCode: ResponseCode.FORBIDDEN,
+        message: '获取微信授权信息失败',
+      });
+    }
+    let user = await this.userService.findUser({
+      openid: authInfo.openid,
+    });
+    if (!user) {
+      Logger.log(`${authInfo.openid} 该微信用户尚未注册,准备创建初始账号`, APP_LOG_CONTEXT);
+      user = await this.userService.createUser({
+        openid: authInfo.openid,
+      });
+    }
+
+    // 签发token
+    const signStr = this.jwtService.sign({
+      ...user,
+      additional: {
+        sessionKey: authInfo.session_key,
+      },
+    });
+    return new HttpResponse({
+      token: signStr,
+      ...user,
+    });
   }
 }

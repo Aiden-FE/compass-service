@@ -14,6 +14,20 @@ generator docs {
   provider = "node node_modules/prisma-docs-generator"
 }
 
+model Todo {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(64)
+  description String?  @db.VarChar(255)
+  isFinished  Boolean? @default(false) @map("is_finished") // 是否完成
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@map("todos")
+}
+
 model Permission {
   id          Int      @id @default(autoincrement())
   key         String   @unique @db.VarChar(128)
@@ -41,9 +55,10 @@ model Role {
 
 model User {
   id            String    @id @default(cuid())
-  password      String    @db.VarChar(64) // 登录密码
+  password      String?   @db.VarChar(64) // 登录密码
+  openid        String?   @db.VarChar(255) // 微信openid
   telephone     String?   @unique @db.VarChar(64) // 手机号码
-  email         String?   @unique @db.VarChar(255)
+  email         String?   @unique @db.VarChar(255) // 邮箱
   name          String?   @db.VarChar(255) // 真实姓名
   nickname      String?   @db.VarChar(24) // 昵称
   gender        Gender?   @default(UNKOWN)
@@ -53,8 +68,9 @@ model User {
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
   roles         Role[]
+  todos         Todo[]
 
-  @@index([telephone, email])
+  @@index([telephone, email, openid])
   @@map("users")
 }
 

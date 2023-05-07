@@ -30,3 +30,5 @@ export const EMAIL_MIN_LIMIT = 8;
 export const URL_MAX_LIMIT = 2083;
 // 短信验证码长度
 export const SMS_LENGTH_LIMIT = 6;
+// 关键子最大长度限制
+export const KEYWORD_MAX_LIMIT = 24;
