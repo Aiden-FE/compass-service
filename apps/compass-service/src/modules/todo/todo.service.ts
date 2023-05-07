@@ -62,7 +62,7 @@ export class TodoService {
         skip: pagination.skip,
         take: pagination.take,
         where,
-        orderBy: [{ updatedAt: 'desc' }],
+        orderBy: [{ isFinished: 'asc' }, { updatedAt: 'desc' }],
         select: {
           id: true,
           title: true,
