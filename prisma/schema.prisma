@@ -56,7 +56,7 @@ model Role {
 model User {
   id            String    @id @default(cuid())
   password      String?   @db.VarChar(64) // 登录密码
-  openid        String?   @db.VarChar(255) // 微信openid
+  openid        String?   @unique @db.VarChar(255) // 微信openid
   telephone     String?   @unique @db.VarChar(64) // 手机号码
   email         String?   @unique @db.VarChar(255) // 邮箱
   name          String?   @db.VarChar(255) // 真实姓名
