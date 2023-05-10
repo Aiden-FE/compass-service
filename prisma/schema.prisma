@@ -53,6 +53,17 @@ model Role {
   @@map("roles")
 }
 
+model Profile {
+  id        Int     @id @default(autoincrement())
+  avatarUrl String? @map("avatar_url") @db.VarChar(2048)
+  aiBalance Int?    @default(1) @map("ai_balance")
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@map("profiles")
+}
+
 model User {
   id            String    @id @default(cuid())
   password      String?   @db.VarChar(64) // 登录密码
@@ -69,6 +80,7 @@ model User {
   updatedAt     DateTime  @updatedAt @map("updated_at")
   roles         Role[]
   todos         Todo[]
+  profiles      Profile[]
 
   @@index([telephone, email, openid])
   @@map("users")

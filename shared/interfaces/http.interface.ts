@@ -22,7 +22,7 @@ export enum ResponseCode {
   // 1004XX含义参考: https://www.5axxw.com/wiki/content/sydn5o
   BAD_REQUEST = 100400, // 业务异常
   UNAUTHORIZED = 100401, // 未授权异常
-  PAYMENT_REQUIRED = 100402,
+  PAYMENT_REQUIRED = 100402, // 需要付费才能使用
   FORBIDDEN = 100403, // 禁止访问,验证不通过
   NOT_FOUND = 100404, // 找不到相关资源
   METHOD_NOT_ALLOWED = 100405,

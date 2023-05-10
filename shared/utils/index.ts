@@ -1,10 +1,21 @@
-import { DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE } from '@shared/config';
+import { CompassEnv, DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE } from '@shared/config';
 import { PaginationRequestFromURLDto } from '@shared/interfaces';
+import { getEnv } from '@shared/utils/env';
 
 export * from './env';
 export { default as JwtStrategy } from './jwt.strategy';
 export { default as validateMultipleDto } from './validate-mutille-dto';
 export * from './cryptographic';
+
+export function getProxyConfig() {
+  if (getEnv(CompassEnv.EXTERNAL_PROXY_HOST) && getEnv(CompassEnv.EXTERNAL_PROXY_PORT)) {
+    return {
+      host: getEnv(CompassEnv.EXTERNAL_PROXY_HOST),
+      port: Number(getEnv(CompassEnv.EXTERNAL_PROXY_PORT)),
+    };
+  }
+  return undefined;
+}
 
 /**
  * @description 包装分页查询参数,确保查询参数正确
