@@ -1,11 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { DBService } from '@app/db';
-import { User } from '@prisma/client';
+import { User, Profile } from '@prisma/client';
 import { UserContextDto } from './user.dto';
 
 @Injectable()
 export class UserService {
   constructor(private dbService: DBService) {}
+
+  async updateProfileByUser(profile: Partial<Profile>, userId: string) {
+    const userProfile = await this.getProfileByUser(userId);
+    await this.dbService.profile.update({
+      where: { id: userProfile.id },
+      data: profile,
+    });
+  }
+
+  async getProfileByUser(userId: string) {
+    let userProfile = await this.dbService.profile.findFirst({
+      where: {
+        userId,
+      },
+    });
+    if (!userProfile) {
+      userProfile = await this.dbService.profile.create({
+        data: {
+          userId,
+        },
+      });
+    }
+
+    return userProfile;
+  }
 
   updateUser(userId: string, user: Omit<Partial<User>, 'id'>) {
     return this.dbService.user.update({
