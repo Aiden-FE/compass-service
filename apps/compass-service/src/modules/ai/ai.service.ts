@@ -21,7 +21,7 @@ export class AIService {
     if (!userProfile.aiBalance) {
       return new HttpResponse(null, {
         statusCode: ResponseCode.PAYMENT_REQUIRED,
-        message: '当前用户不存在可用额度',
+        message: '当前用户不存在可用额度,请联系管理员增加',
       });
     }
     const openAI = this.getOpenAI();
@@ -55,7 +55,7 @@ export class AIService {
         content = resp?.data.choices.pop().message?.content;
       }
     } catch (e) {
-      return new HttpResponse({
+      throw new HttpResponse({
         statusCode: ResponseCode.BAD_REQUEST,
         message: e?.message || e?.toString() || e,
       });
